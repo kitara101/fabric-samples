@@ -13,7 +13,17 @@ docker-compose -f docker-compose.yml kill && docker-compose -f docker-compose.ym
 # remove the local state
 rm -f ~/.hfc-key-store/*
 
+echo removing docker containers
+CONTAINERS=$(docker ps -aqf name=dev)
+if [ -n "$CONTAINERS" ]; then
+    docker rm -v $CONTAINERS
+fi
+
+echo removing docker images
 # remove chaincode docker images
-docker rmi $(docker images dev-* -q)
+IMAGES=$(docker images dev-* -q)
+if [ -n "$IMAGES" ]; then
+    docker rmi $IMAGES
+fi
 
 # Your system is now clean

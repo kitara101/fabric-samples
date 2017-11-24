@@ -12,8 +12,11 @@ export MSYS_NO_PATHCONV=1
 
 starttime=$(date +%s)
 
+rm -fr ./hfc-key-store
+
 # launch network; create channel and join peer to channel
 cd ../basic-network
+./teardown.sh
 ./start.sh
 
 # Now launch the CLI container in order to install, instantiate chaincode
