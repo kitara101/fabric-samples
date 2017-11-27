@@ -10,7 +10,7 @@ if [ ! -d ./hfc-key-store ]; then
 fi
 echo "===> Making test query of the chaincode app."
 
-SLEEP_TIME=10
+SLEEP_TIME=5
 echo "===> Waing ${SLEEP_TIME} seconds before proceeding."
 sleep ${SLEEP_TIME}
 

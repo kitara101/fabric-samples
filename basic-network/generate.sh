@@ -6,7 +6,7 @@
 #
 export PATH=$GOPATH/src/github.com/hyperledger/fabric/build/bin:${PWD}/../bin:${PWD}:$PATH
 export FABRIC_CFG_PATH=${PWD}
-CHANNEL_NAME=mychannel
+. ./.env
 
 # remove previous crypto material and config transactions
 rm -fr config/*
@@ -30,17 +30,17 @@ if [ "$?" -ne 0 ]; then
   exit 1
 fi
 
-echo "--> Generating channel confiruation for $CHANNEL_NAME."
+echo "--> Generating channel confiruation for '$CHANNEL'."
 # generate channel configuration transaction
-configtxgen -profile OneOrgChannel -outputCreateChannelTx ./config/$CHANNEL_NAME.tx -channelID $CHANNEL_NAME
+configtxgen -profile OneOrgChannel -outputCreateChannelTx ./config/$CHANNEL.tx -channelID $CHANNEL
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate channel configuration transaction..."
   exit 1
 fi
 
-echo "--> Generating anchor peers configuration for $CHANNEL_NAME."
+echo "--> Generating anchor peers configuration for '$CHANNEL'."
 # generate anchor peer transaction
-configtxgen -profile OneOrgChannel -outputAnchorPeersUpdate ./config/Org1MSPanchors_$CHANNEL_NAME.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
+configtxgen -profile OneOrgChannel -outputAnchorPeersUpdate ./config/Org1MSPanchors_$CHANNEL.tx -channelID $CHANNEL -asOrg Org1MSP
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate anchor peer update for Org1MSP..."
   exit 1
