@@ -7,23 +7,28 @@
 # Exit on first error, print all commands.
 set -e
 
+./stop.sh
+
 # Shut down the Docker containers for the system tests.
-docker-compose -f docker-compose.yml kill && docker-compose -f docker-compose.yml down
+echo "===> Removing docker containers."
+echo "--> Removing main containers."
+docker-compose -f docker-compose.yml down
 
-# remove the local state
-rm -f ~/.hfc-key-store/*
-
-echo removing docker containers
+echo "--> Removing chaincode containers."
 CONTAINERS=$(docker ps -aqf name=dev)
 if [ -n "$CONTAINERS" ]; then
     docker rm -v $CONTAINERS
 fi
 
-echo removing docker images
 # remove chaincode docker images
+echo "--> Removing chaincode images."
 IMAGES=$(docker images dev-* -q)
-if [ -n "$IMAGES" ]; then
+if [ -n "$IMAGES" ]; then 
     docker rmi $IMAGES
 fi
+
+echo "===> Containers removed."
+# remove the local state
+rm -f ~/.hfc-key-store/*
 
 # Your system is now clean

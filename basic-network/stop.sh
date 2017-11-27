@@ -5,7 +5,13 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # Exit on first error, print all commands.
-set -ev
+set -e
 
 # Shut down the Docker containers that might be currently running.
-docker-compose -f docker-compose.yml stop
+
+CONTAINERS=$(docker ps -q)
+if [ -n "$CONTAINERS" ]; then
+    echo "===> Stopping docker containers."
+    docker-compose -f docker-compose.yml stop
+    echo "===> Stopped."
+fi

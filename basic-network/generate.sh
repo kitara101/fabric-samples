@@ -10,15 +10,19 @@ CHANNEL_NAME=mychannel
 
 # remove previous crypto material and config transactions
 rm -fr config/*
-rm -fr crypto-config/*
+#rm -fr crypto-config/*
+
+echo "====> Generating crypto material"
 
 # generate crypto material
-cryptogen generate --config=./crypto-config.yaml
-if [ "$?" -ne 0 ]; then
-  echo "Failed to generate crypto material..."
-  exit 1
-fi
+#cryptogen generate --config=./crypto-config.yaml
+#if [ "$?" -ne 0 ]; then
+#  echo "Failed to generate crypto material..."
+#  exit 1
+#fi
 
+echo "====> Generating Fabric configuration."
+echo "--> Generating genesis block."
 # generate genesis block for orderer
 configtxgen -profile OneOrgOrdererGenesis -outputBlock ./config/genesis.block
 if [ "$?" -ne 0 ]; then
@@ -26,16 +30,19 @@ if [ "$?" -ne 0 ]; then
   exit 1
 fi
 
+echo "--> Generating channel confiruation for $CHANNEL_NAME."
 # generate channel configuration transaction
-configtxgen -profile OneOrgChannel -outputCreateChannelTx ./config/channel.tx -channelID $CHANNEL_NAME
+configtxgen -profile OneOrgChannel -outputCreateChannelTx ./config/$CHANNEL_NAME.tx -channelID $CHANNEL_NAME
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate channel configuration transaction..."
   exit 1
 fi
 
+echo "--> Generating anchor peers configuration for $CHANNEL_NAME."
 # generate anchor peer transaction
-configtxgen -profile OneOrgChannel -outputAnchorPeersUpdate ./config/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
+configtxgen -profile OneOrgChannel -outputAnchorPeersUpdate ./config/Org1MSPanchors_$CHANNEL_NAME.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate anchor peer update for Org1MSP..."
   exit 1
 fi
+echo "====> Fabric configuraiton is genereated."
