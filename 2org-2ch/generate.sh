@@ -62,10 +62,11 @@ if [ "$?" -ne 0 ]; then
   echo "Failed to generate anchor peer update for Org1MSP..."
   exit 1
 fi
-echo "===> Fabric configuraiton is genereated."
+
 
 echo "--> Generating docker container configuration."
 CA_CRYPTO_DIR=./crypto-config/peerOrganizations/org1.example.com/ca
 CA_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org1.example.com/ca | grep _sk)
 sed -e "s/{CA_PRIVATE_KEY}/${CA_PRIVATE_KEY}/" ./docker-compose-template.yml > $DOCKER_CONFIG_FILE
-echo "--> Generating docker container configuration."
+
+echo "===> Fabric configuraiton is genereated."

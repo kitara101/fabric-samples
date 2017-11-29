@@ -22,7 +22,7 @@ fi
 
 echo "--> Removing docker configuration."
 if [ -e $DOCKER_CONFIG_FILE ]; then 
-    echo rm $DOCKER_CONFIG_FILE
+    rm $DOCKER_CONFIG_FILE
 fi
 echo "===> Containers removed."
 
