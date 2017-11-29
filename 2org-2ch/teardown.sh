@@ -1,12 +1,5 @@
-#!/bin/bash
-#
-# Copyright IBM Corp All Rights Reserved
-#
-# SPDX-License-Identifier: Apache-2.0
-#
-# Exit on first error, print all commands.
-set -e
-
+#!/bin/bash -e
+. ./.env
 ./stop.sh
 
 # Shut down the Docker containers for the system tests.
@@ -27,9 +20,18 @@ if [ -n "$IMAGES" ]; then
     docker rmi $IMAGES
 fi
 
+echo "--> Removing docker configuration."
+if [ -e $DOCKER_CONFIG_FILE ]; then 
+    echo rm $DOCKER_CONFIG_FILE
+fi
 echo "===> Containers removed."
+
+
+
+echo "===> Removing stale crypto material."
 
 # remove the local state
 rm -f ~/.hfc-key-store/*
 rm -fr ./hfc-key-store
+rm -rf ./crypto-config
 # Your system is now clean

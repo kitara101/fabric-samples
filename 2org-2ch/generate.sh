@@ -12,16 +12,16 @@ export FABRIC_CFG_PATH=${PWD}
 rm -fr config/*
 #rm -fr crypto-config/*
 
-echo "====> Generating crypto material"
+echo "===> Generating crypto material"
 
 # generate crypto material
-#cryptogen generate --config=./crypto-config.yaml
-#if [ "$?" -ne 0 ]; then
-#  echo "Failed to generate crypto material..."
-#  exit 1
-#fi
+cryptogen generate --config=./crypto-config.yaml
+if [ "$?" -ne 0 ]; then
+  echo "Failed to generate crypto material..."
+  exit 1
+fi
 
-echo "====> Generating Fabric configuration."
+echo "===> Generating Fabric configuration."
 echo "--> Generating genesis block."
 # generate genesis block for orderer
 configtxgen -profile OneOrgOrdererGenesis -outputBlock ./config/genesis.block
@@ -62,4 +62,10 @@ if [ "$?" -ne 0 ]; then
   echo "Failed to generate anchor peer update for Org1MSP..."
   exit 1
 fi
-echo "====> Fabric configuraiton is genereated."
+echo "===> Fabric configuraiton is genereated."
+
+echo "--> Generating docker container configuration."
+CA_CRYPTO_DIR=./crypto-config/peerOrganizations/org1.example.com/ca
+CA_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org1.example.com/ca | grep _sk)
+sed -e "s/{CA_PRIVATE_KEY}/${CA_PRIVATE_KEY}/" ./docker-compose-template.yml > $DOCKER_CONFIG_FILE
+echo "--> Generating docker container configuration."

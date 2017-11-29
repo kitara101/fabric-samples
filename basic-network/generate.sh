@@ -10,7 +10,7 @@ export FABRIC_CFG_PATH=${PWD}
 
 # remove previous crypto material and config transactions
 rm -fr config/*
-#rm -fr crypto-config/*
+rm -fr crypto-config/*
 
 echo "====> Generating crypto material"
 
