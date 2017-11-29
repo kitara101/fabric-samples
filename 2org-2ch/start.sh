@@ -20,6 +20,11 @@ fi
 ###################################################################################################
 ###################################################################################################
 ### Starting hyperledger network containers.
+if [ ! -e $DOCKER_CONFIG_FILE ]; then
+    echo "===> !!! Docker configuration is not found -> generating whole configuration. "
+    ./teardown.sh
+    ./generate.sh
+fi
 echo "===> Starting docker conainers."
 docker-compose -f $DOCKER_CONFIG_FILE up -d ca.example.com orderer.example.com peer0.org1.example.com couchdb
 echo "===> Containers up."

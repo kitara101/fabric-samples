@@ -5,7 +5,12 @@
 # Shut down the Docker containers for the system tests.
 echo "===> Removing docker containers."
 echo "--> Removing main containers."
-docker-compose -f docker-compose.yml down
+if [ -e $DOCKER_CONFIG_FILE ]; then 
+    docker-compose -f docker-compose.yml down
+    rm $DOCKER_CONFIG_FILE
+elif [ -n "$(docker ps -q)" ]; then
+    docker rm -fv $(docker ps -q)
+fi
 
 echo "--> Removing chaincode containers."
 CONTAINERS=$(docker ps -aqf name=dev)
@@ -20,13 +25,7 @@ if [ -n "$IMAGES" ]; then
     docker rmi $IMAGES
 fi
 
-echo "--> Removing docker configuration."
-if [ -e $DOCKER_CONFIG_FILE ]; then 
-    rm $DOCKER_CONFIG_FILE
-fi
 echo "===> Containers removed."
-
-
 
 echo "===> Removing stale crypto material."
 

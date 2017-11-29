@@ -9,11 +9,13 @@ export FABRIC_CFG_PATH=${PWD}
 . ./.env
 
 # remove previous crypto material and config transactions
-rm -fr config/*
-#rm -fr crypto-config/*
+if [ ! -d ./config ]; then 
+  mkdir ./config
+fi
+
 
 echo "===> Generating crypto material"
-
+sdfasdf
 # generate crypto material
 cryptogen generate --config=./crypto-config.yaml
 if [ "$?" -ne 0 ]; then
