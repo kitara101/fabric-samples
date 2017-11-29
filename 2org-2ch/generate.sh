@@ -15,7 +15,6 @@ fi
 
 
 echo "===> Generating crypto material"
-sdfasdf
 # generate crypto material
 cryptogen generate --config=./crypto-config.yaml
 if [ "$?" -ne 0 ]; then
