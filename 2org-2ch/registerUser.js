@@ -8,6 +8,32 @@
  * Register and Enroll a user
  */
 
+var config = [
+    {
+        ca_port: 7054,
+        ca_name: 'ca.org1.example.com',
+        msp:  'Org1MSP'
+    },
+    {
+        ca_port: 7055,
+        ca_name: 'ca.org2.example.com',
+        msp:  'Org2MSP'
+    }    
+];
+
+let [,, org] = process.argv;
+if (typeof (org) === "undefined" ) {
+    console.log("Organization not specified, assuming 'org1'");
+    org = "org1";
+} else if (org !== "org1" && org !== "org2") {
+    console.log(`Expecting 'org1' or 'org2', got ${org}. Assuming 'org1`);
+    org = "rg1";
+} 
+
+const Org = 'O' + org.substr(1);
+const i = (org == "org1" ? 0 : 1);
+const {ca_port: caPort, ca_name: caName, msp: mspName} = config[i];
+
 var Fabric_Client = require('fabric-client');
 var Fabric_CA_Client = require('fabric-ca-client');
 
@@ -20,7 +46,7 @@ var fabric_client = new Fabric_Client();
 var fabric_ca_client = null;
 var admin_user = null;
 var member_user = null;
-var store_path = path.join(__dirname, 'hfc-key-store');
+var store_path = path.join(__dirname, 'hfc-key-store/' + org);
 console.log(' Store path:'+store_path);
 
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
@@ -39,7 +65,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
     	verify: false
     };
     // be sure to change the http to https when the CA is running TLS enabled
-    fabric_ca_client = new Fabric_CA_Client('http://localhost:7054', null , '', crypto_suite);
+    fabric_ca_client = new Fabric_CA_Client(`http://localhost:${caPort}`, null , '', crypto_suite);
 
     // first check to see if the admin is already enrolled
     return fabric_client.getUserContext('admin', true);
@@ -53,7 +79,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 
     // at this point we should have the admin user
     // first need to register the user with the CA server
-    return fabric_ca_client.register({enrollmentID: 'user1', affiliation: 'org1.department1'}, admin_user);
+    return fabric_ca_client.register({enrollmentID: 'user1', affiliation: `${org}.department1`}, admin_user);
 }).then((secret) => {
     // next we need to enroll the user with CA server
     console.log('Successfully registered user1 - secret:'+ secret);
@@ -63,7 +89,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
   console.log('Successfully enrolled member user "user1" ');
   return fabric_client.createUser(
      {username: 'user1',
-     mspid: 'Org1MSP',
+     mspid: mspName,
      cryptoContent: { privateKeyPEM: enrollment.key.toBytes(), signedCertPEM: enrollment.certificate }
      });
 }).then((user) => {

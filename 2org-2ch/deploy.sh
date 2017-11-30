@@ -22,13 +22,27 @@ docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc
 echo "===> Joining channel '$CHANNEL_B'."
 docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${ORG,}.example.com/msp" peer0.${ORG,}.example.com peer channel join -b $CHANNEL_B.block
 
+
+
+#echo "===> !!!Peer Org 2 !!! Creating channel '$CHANNEL_A'."
+docker exec -e "CORE_PEER_LOCALMSPID=Org2MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org2.example.com/msp" peer0.org2.example.com peer channel fetch config $CHANNEL_A.block -o orderer.example.com:7050 -c $CHANNEL_A 
+
+# Join peer0.${ORG,}.example.com to the channel.
+echo "===> !!!Peer Org 2 !!! Joining channel '$CHANNEL_A'."
+docker exec -e "CORE_PEER_LOCALMSPID=Org2MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org2.example.com/msp" peer0.org2.example.com peer channel join -b $CHANNEL_A.block
+
+#echo "===> !!!Peer Org 2 !!! Creating channel '$CHANNEL_B'."
+docker exec -e "CORE_PEER_LOCALMSPID=Org2MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org2.example.com/msp" peer0.org2.example.com peer channel fetch config $CHANNEL_B.block -o orderer.example.com:7050 -c $CHANNEL_B
+
+# Join peer0.${ORG,}.example.com to the channel.
+echo "===> !!!Peer Org 2 !!! Joining channel '$CHANNEL_B'."
+docker exec -e "CORE_PEER_LOCALMSPID=Org2MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org2.example.com/msp" peer0.org2.example.com peer channel join -b $CHANNEL_B.block
+
+
 ###################################################
 # Deploy the chaincode
 ###################################################
-
 echo "===> Installing chaincode application (Smart Contract)."
-echo "--> Running CLI container."
-docker-compose -f ./docker-compose.yml up -d cli
 
 # deploy to channel_a
 echo "--> Deploying chaincode '$CHAINCODE' to peer."
@@ -44,7 +58,7 @@ docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt
 echo "===> Chaincode is ready."
 
 # deploy to channel_b
-echo "--> Initiating chaincode '$CHAINCODE' on channel '$CHANNEL_A'."
+echo "--> Initiating chaincode '$CHAINCODE' on channel '$CHANNEL_B'."
 docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${ORG,}.example.com/users/Admin@${ORG,}.example.com/msp" cli peer chaincode instantiate -o orderer.example.com:7050 -C $CHANNEL_B -n $CHAINCODE -v 1.0 -c '{"Args":[""]}' -P "OR ('${ORG}MSP.member','Org2MSP.member')"
 
 echo "===> Waiting ${FABRIC_START_TIMEOUT} seconds for chaincode container to start."

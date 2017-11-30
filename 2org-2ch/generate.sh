@@ -67,7 +67,9 @@ fi
 
 echo "--> Generating docker container configuration."
 CA_CRYPTO_DIR=./crypto-config/peerOrganizations/org1.example.com/ca
-CA_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org1.example.com/ca | grep _sk)
-sed -e "s/{CA_PRIVATE_KEY}/${CA_PRIVATE_KEY}/" ./docker-compose-template.yml > $DOCKER_CONFIG_FILE
+CA_ORG1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org1.example.com/ca | grep _sk)
+CA_ORG2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org2.example.com/ca | grep _sk)
+
+sed -e "s/{CA_ORG1_PRIVATE_KEY}/${CA_ORG1_PRIVATE_KEY}/"  -e "s/{CA_ORG2_PRIVATE_KEY}/${CA_ORG2_PRIVATE_KEY}/" ./docker-compose-template.yml > $DOCKER_CONFIG_FILE
 
 echo "===> Fabric configuraiton is genereated."

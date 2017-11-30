@@ -9,6 +9,30 @@
  * Chaincode query
  */
 
+var config = [
+    {
+        peer_port: 7051,
+        msp:  'Org1MSP'
+    },
+    {
+        peer_port: 7061,
+        msp:  'Org2MSP'
+    }    
+];
+
+let [,, org] = process.argv;
+if (typeof (org) === "undefined" ) {
+    console.log("Organization not specified, assuming 'org1'");
+    org = "org1";
+} else if (org !== "org1" && org !== "org2") {
+    console.log(`Expecting 'org1' or 'org2', got ${org}. Assuming 'org1q`);
+    org = "rg1";
+} 
+
+const Org = 'O' + org.substr(1);
+const i = (org == "org1" ? 0 : 1);
+const {peer_port: peerPort, msp: mspName} = config[i];
+
 var Fabric_Client = require('fabric-client');
 var path = require('path');
 var util = require('util');
@@ -21,14 +45,14 @@ var fabric_client = new Fabric_Client();
 // setup the fabric network
 var channel_a = fabric_client.newChannel('channel-a'),
     channel_b = fabric_client.newChannel('channel-b');
-var peer = fabric_client.newPeer('grpc://localhost:7051');
+var peer = fabric_client.newPeer(`grpc://localhost:${peerPort}`);
 channel_a.addPeer(peer);
 channel_b.addPeer(peer);
 
 //
 var member_user = null;
-var store_path = path.join(__dirname, 'hfc-key-store');
-console.log('Store path:'+store_path);
+var store_path = path.join(__dirname, 'hfc-key-store/' + org);
+console.log('Store path:' + store_path);
 var tx_id = null;
 
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
