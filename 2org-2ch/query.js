@@ -44,8 +44,9 @@ var fabric_client = new Fabric_Client();
 
 // setup the fabric network
 var channel_a = fabric_client.newChannel('channel-a'),
-    channel_b = fabric_client.newChannel('channel-b');
-var peer = fabric_client.newPeer(`grpc://localhost:${peerPort}`);
+	channel_b = fabric_client.newChannel('channel-b');
+let url = `grpc://localhost:${peerPort}`;
+var peer = fabric_client.newPeer(url);
 channel_a.addPeer(peer);
 channel_b.addPeer(peer);
 
@@ -53,6 +54,8 @@ channel_b.addPeer(peer);
 var member_user = null;
 var store_path = path.join(__dirname, 'hfc-key-store/' + org);
 console.log('Store path:' + store_path);
+console.log("Peer\'s url: " + url);
+console.log('MSPName: ' + mspName);
 var tx_id = null;
 
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
