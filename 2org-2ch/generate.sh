@@ -6,6 +6,7 @@
 #
 export PATH=$GOPATH/src/github.com/hyperledger/fabric/build/bin:${PWD}/../bin:${PWD}:$PATH
 export FABRIC_CFG_PATH=${PWD}
+
 . ./.env
 
 # remove previous crypto material and config transactions
@@ -65,11 +66,18 @@ if [ "$?" -ne 0 ]; then
 fi
 
 
-echo "--> Generating docker container configuration."
+echo "--> Updating docker environment."
 CA_CRYPTO_DIR=./crypto-config/peerOrganizations/org1.example.com/ca
 CA_ORG1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org1.example.com/ca | grep _sk)
 CA_ORG2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org2.example.com/ca | grep _sk)
 
-sed -e "s/{CA_ORG1_PRIVATE_KEY}/${CA_ORG1_PRIVATE_KEY}/"  -e "s/{CA_ORG2_PRIVATE_KEY}/${CA_ORG2_PRIVATE_KEY}/" ./docker-compose-template.yml > $DOCKER_CONFIG_FILE
+# keep original env file
+#if [ ! -e  ./.env_orig ]; then
+ # cp .env .env_orig
+#fi 
+
+cp ./.env_base ./.env
+echo CA_ORG1_PRIVATE_KEY=${CA_ORG1_PRIVATE_KEY} >> ./.env
+echo CA_ORG2_PRIVATE_KEY=${CA_ORG2_PRIVATE_KEY} >> ./.env
 
 echo "===> Fabric configuraiton is genereated."

@@ -1,16 +1,11 @@
 #!/bin/bash -e
-. ./.env
+
 ./stop.sh
 
 # Shut down the Docker containers for the system tests.
 echo "===> Removing docker containers."
 echo "--> Removing main containers."
-if [ -e $DOCKER_CONFIG_FILE ]; then 
-    docker-compose -f docker-compose.yml down
-    rm $DOCKER_CONFIG_FILE
-elif [ -n "$(docker ps -q)" ]; then
-    docker rm -fv $(docker ps -q)
-fi
+docker-compose down -v --remove-orphans
 
 echo "--> Removing chaincode containers."
 CONTAINERS=$(docker ps -aqf name=dev)
