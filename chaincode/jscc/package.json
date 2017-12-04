@@ -1,0 +1,22 @@
+{
+  "name": "jscc",
+  "version": "1.0.0",
+  "description": "This is a playground for hyperledger node.js chaincode",
+  "main": "jscc.js",
+  "scripts": {
+    "test": "node jscc.js",
+    "start": "node jscc.js"
+  },
+  "dependencies": {
+    "fabric-shim": "unstable"
+  },
+  "keywords": [
+    "chaincode",
+    "node",
+    "hyperledger",
+    "fabric",
+    "blockchain"
+  ],
+  "author": "Alexey Titorenko",
+  "license": "ISC"
+}

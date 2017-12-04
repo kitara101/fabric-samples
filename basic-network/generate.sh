@@ -9,17 +9,17 @@ export FABRIC_CFG_PATH=${PWD}
 . ./.env
 
 # remove previous crypto material and config transactions
-rm -fr config/*
+#rm -fr config/*
 rm -fr crypto-config/*
 
 echo "====> Generating crypto material"
 
 # generate crypto material
-#cryptogen generate --config=./crypto-config.yaml
-#if [ "$?" -ne 0 ]; then
-#  echo "Failed to generate crypto material..."
-#  exit 1
-#fi
+cryptogen generate --config=./crypto-config.yaml
+if [ "$?" -ne 0 ]; then
+  echo "Failed to generate crypto material..."
+  exit 1
+fi
 
 echo "====> Generating Fabric configuration."
 echo "--> Generating genesis block."
