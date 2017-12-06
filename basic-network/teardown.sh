@@ -12,7 +12,7 @@ set -e
 # Shut down the Docker containers for the system tests.
 echo "===> Removing docker containers."
 echo "--> Removing main containers."
-docker-compose -f docker-compose.yml down
+docker-compose down -v --remove-orphans
 
 echo "--> Removing chaincode containers."
 CONTAINERS=$(docker ps -aqf name=dev)
@@ -26,6 +26,8 @@ IMAGES=$(docker images dev-* -q)
 if [ -n "$IMAGES" ]; then 
     docker rmi $IMAGES
 fi
+
+docker volume prune -f
 
 echo "===> Containers removed."
 # remove the local state

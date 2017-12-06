@@ -1,20 +1,68 @@
+'use strict';
+
 const shim = require('fabric-shim');
 const util = require('util');
 
-var Asset = class {
+class Entity {
+    constructor() {
+        this.type = this.constructor.name;
+    }
+}
+class WineBottle extends Entity {
+
+    constructor(id, brand, volume, name, date, owner) {
+        super();
+        this.id = id;
+        this.brand = brand;
+        this.volume = volume;
+        this.name = name;
+        this.date = date;
+        this.owner = owner;
+    }
+}
+
+class WineBox extends Entity {
+    constructor(id, bottles) {
+        super();
+        this.id = id;
+        this.bottles = bottles;
+    }
+}
+
+let Asset = class {
 
     async Init(stub) {
-        let ret = stub.getFunctionAndParameters();
-        let params = ret.params;
-        if (params.length != 2) {
-            return shim.error("Incorrect number of arguments. Expecting 2");
-        }
-        let A = params[0];
-        let B = params[1];
-
         try {
-            await stub.putState(A, Buffer.from(B));
+            let ret = stub.getFunctionAndParameters();
+            console.log("called 'Init'");
             return shim.success(Buffer.from("success"));
+        } catch (e) {
+            return shim.error(e);
+        }
+    }
+
+    async populate(stub) {
+        try {
+            let ret = stub.getFunctionAndParameters();
+            console.log("called 'populate'");
+            let bottles = [];
+            bottles.push(new WineBottle(3, 'kit', "0.7", "some wine", "2011-10-05", "kit"));
+            console.log("after0" );
+            bottles.push(new WineBottle(4, 'kit', "0.7", "another wine", "2011-10-05", "kit"));
+            bottles.push(new WineBottle(5, 'kit', "0.7", "some another wine", "2011-10-05", "kit"));
+            console.log(bottles.toString());
+
+
+            for (let i = 0; i < bottles.length; i++) {
+                console.log("bottle is " + bottles[i].toString());
+                await stub.putState(i + "", Buffer.from(JSON.stringify(bottles[i])));
+            }
+
+            let box = new WineBox(1, [3, 4, 5])
+            try {
+            await stub.putState(box.id + "", Buffer.from(JSON.stringify(box)));
+            } catch (e) { console.log(e);};
+            return Buffer.from("success");
         } catch (e) {
             return shim.error(e);
         }
@@ -22,23 +70,55 @@ var Asset = class {
 
 
     async Invoke(stub) {
-        let ret = stub.getFunctionAndParameters();
-        let params = ret.params;
-        let fn = ret.fcn;
-        if (fn === 'set') {
-            var result = await this.setValues(stub, params);
-            if(result)
-                return shim.success(Buffer.from("success"));
-        } else {
-            var result = await this.getValues(stub, params);
-            if(result)
-                return shim.success(Buffer.from(result.toString()));
+        try {
+            let ret = stub.getFunctionAndParameters();
+            let params = ret.params;
+            let fcn = this[ret.fcn];
+            console.log("Calling operation: " + ret.fcn);
+            const result = await fcn(stub, params)
+            return shim.success(result);
+        } catch (e) {
+            return shim.error(e);
         }
-        if (!result) {
-            return shim.error('Failed to get asset');
+    }
+
+    async getAll(stub, args) {
+        if (args.length != 0) {
+            return shim.error("Incorrect number of arguments. Expecting 0");
         }
 
+        const i = await stub.getStateByRange('', '');
+        try {
+            let allResults = [];
+            while (true) {
+                let res = await i.next();
+
+                if (res.value && res.value.value.toString()) {
+                    let jsonRes = {};
+                    console.log(res.value.value.toString('utf8'));
+
+                    jsonRes.key = res.value.key;
+                    try {
+                        jsonRes.Record = JSON.parse(res.value.value.toString('utf8'));
+                    } catch (err) {
+                        console.error(err);
+                        jsonRes.Record = res.value.value.toString('utf8');
+                    }
+                    allResults.push(jsonRes);
+                }
+
+                if (res.done) {
+                    console.log('end of data');
+                    await i.close();
+                    console.info(allResults);
+                    return Buffer.from(JSON.stringify(allResults));
+                }
+            }
+        } catch (e) {
+            return shim.error(e);
+        }
     }
+
 
     async setValues(stub, args) {
         if (args.length != 2) {
@@ -65,75 +145,3 @@ var Asset = class {
 }
 
 shim.start(new Asset());
-/*const shim = requires('fabric-shim');
-
-const Chaincode = class {
-
-    async Init(stub) {
-        let {fcn: fname, params:[ a, aValue, b, bValue]} = stub.getFunctionAndParameters();
-        try {
-            await stub.putState(A, Buffer.from(B));
-            return shim.success(Buffer.from("success"));
-        } catch (e) {
-            return shim.error(e);
-}
-    }
-
-    async Invoke(stub) {
-
-    }
-};
-
-shim.start(new Chaincode());
-*/
-
-/*
-chaincode.init = function() {
-    return shim.Success("hello, init");
-}
-
-chaincode.invoke = function() {
-    var args = JSON.parse(shim.GetArguments());
-    if (args.length < 2) {
-        return shim.Error("invalid request, arg count " + args.length);
-    }
-
-    switch (args[0]) {
-    case "put":
-        if (args.length < 3) {
-            return shim.Error("invalid put request, arg count " + args.length);
-        }
-        shim.PutState(args[1], args[2]);
-        return;
-
-    case "get":
-        var result = shim.GetState(args[1]);
-        if (shim.GetLastError() != null) {
-            return shim.Error(shim.GetLastError());
-        }
-        return shim.Success(result);
-
-    case "rangequery":
-        if (args.length < 3) {
-            return shim.Error("invalid range-query request, arg count " + args.length);
-        }
-        var ite = shim.GetStateByRange(args[1], args[2]);
-        if (shim.GetLastError() != null) {
-            return shim.Error(shim.GetLastError());
-        }
-        var count = 0;
-        while (ite.HasNext()) {
-            if (ite.Next()) {
-                var key = ite.GetCurrentKey();
-                var val = ite.GetCurrentValue();
-                console.log("key", key, "value", val);
-                count++
-            } else {
-                return shim.Error(ite.GetError());
-            }
-        }
-        ite.Close();
-        return shim.Success(count.toString());
-    }
-}*/
-
