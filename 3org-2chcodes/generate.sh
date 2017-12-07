@@ -7,7 +7,11 @@
 export PATH=$GOPATH/src/github.com/hyperledger/fabric/build/bin:${PWD}/../bin:${PWD}:$PATH
 export FABRIC_CFG_PATH=${PWD}
 
-. ./.env
+. ./.env_base
+
+if [ -f ./.env ]; then
+  . ./.env
+fi
 
 # remove previous crypto material and config transactions
 if [ ! -d ./config ]; then 
