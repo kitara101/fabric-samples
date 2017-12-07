@@ -43,12 +43,12 @@ var fabric_client = new Fabric_Client();
 
 
 // setup the fabric network
-var channel_a = fabric_client.newChannel('channel-a'),
-	channel_b = fabric_client.newChannel('channel-b');
+var channel_a = fabric_client.newChannel('channel-12');
+	//channel_b = fabric_client.newChannel('channel-b');
 let url = `grpc://localhost:${peerPort}`;
 var peer = fabric_client.newPeer(url);
 channel_a.addPeer(peer);
-channel_b.addPeer(peer);
+//channel_b.addPeer(peer);
 
 //
 var member_user = null;

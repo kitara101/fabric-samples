@@ -9,6 +9,11 @@ fi
 if [ !  -d ./node_modules ]; then
     npm install
 fi
-node enrollAdmin.js org2
-node registerUser.js org2
-node query.js org2
+
+
+node enrollAdmin.js org1
+node registerUser.js org1
+node query.js org1
+#node enrollAdmin.js org2
+#node registerUser.js org2
+#node query.js org2

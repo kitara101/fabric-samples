@@ -28,4 +28,5 @@ echo "===> Removing stale crypto material."
 rm -f ~/.hfc-key-store/*
 rm -fr ./hfc-key-store
 rm -rf ./crypto-config
+rm -rf ./config
 # Your system is now clean
