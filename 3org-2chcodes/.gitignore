@@ -1,0 +1,6 @@
+.env
+package-lock.json
+hfc-key-store/
+node_modules/
+crypto-config/
+config/
