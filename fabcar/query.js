@@ -17,7 +17,11 @@ var os = require('os');
 var fabric_client = new Fabric_Client();
 
 // setup the fabric network
+<<<<<<< HEAD
 var channel = fabric_client.newChannel('mychannel');
+=======
+var channel = fabric_client.newChannel('my-test-channel');
+>>>>>>> release
 var peer = fabric_client.newPeer('grpc://localhost:7051');
 channel.addPeer(peer);
 

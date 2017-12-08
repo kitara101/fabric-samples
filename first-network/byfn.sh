@@ -203,7 +203,10 @@ function generateCerts (){
   echo "##########################################################"
   echo "##### Generate certificates using cryptogen tool #########"
   echo "##########################################################"
+<<<<<<< HEAD
 
+=======
+>>>>>>> release
   if [ -d "crypto-config" ]; then
     rm -Rf crypto-config
   fi
