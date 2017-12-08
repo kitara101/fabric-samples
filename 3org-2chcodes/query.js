@@ -1,37 +1,4 @@
-
 'use strict';
-/*
-* Copyright IBM Corp All Rights Reserved
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
-/*
- * Chaincode query
- */
-
-var config = [
-    {
-        peer_port: 7051,
-        msp:  'Org1MSP'
-    },
-    {
-        peer_port: 7061,
-        msp:  'Org2MSP'
-    }    
-];
-
-let [,, org] = process.argv;
-if (typeof (org) === "undefined" ) {
-    console.log("Organization not specified, assuming 'org1'");
-    org = "org1";
-} else if (org !== "org1" && org !== "org2") {
-    console.log(`Expecting 'org1' or 'org2', got ${org}. Assuming 'org1q`);
-    org = "rg1";
-} 
-
-const Org = 'O' + org.substr(1);
-const i = (org == "org1" ? 0 : 1);
-const {peer_port: peerPort, msp: mspName} = config[i];
 
 var Fabric_Client = require('fabric-client');
 var path = require('path');
@@ -40,59 +7,70 @@ var os = require('os');
 
 //
 var fabric_client = new Fabric_Client();
+// setup the fabric network 
+const 	channel_12 = fabric_client.newChannel('channel-12'),
+		channel_23 = fabric_client.newChannel('channel-23');
+let orgs = [
+	{ 	org: "org1",
+		url: "grpc://localhost:7051",
+		msp: "Org1MSP"
+	},
+	{	org: "org2",
+		url: "grpc://localhost:7061",
+		msp: "Org1MSP"
+	},
+	{	org: "org3",
+		url: "grpc://localhost:7071",
+		msp: "Org1MSP"
+	}
+];
 
-
-// setup the fabric network
-var channel_a = fabric_client.newChannel('channel-12');
-	//channel_b = fabric_client.newChannel('channel-b');
-let url = `grpc://localhost:${peerPort}`;
-var peer = fabric_client.newPeer(url);
-channel_a.addPeer(peer);
-//channel_b.addPeer(peer);
+const request = {
+	//targets : --- letting this default to the peers assigned to the channel
+	chaincodeId: 'fabcar',
+	fcn: 'queryAllCars',
+	args: ['']
+};
 
 //
-var member_user = null;
-var store_path = path.join(__dirname, 'hfc-key-store/' + org);
-console.log('Store path:' + store_path);
-console.log("Peer\'s url: " + url);
-console.log('MSPName: ' + mspName);
+let org1_user = null, org2_user = null, org3_user = null;
+var store_path_org1 = path.join(__dirname, 'hfc-key-store/' + orgs[0].org);
+let store_path_org2 = path.join(__dirname, 'hfc-key-store/' + orgs[1].org);
+let store_path_org3 = path.join(__dirname, 'hfc-key-store/' + orgs[2].org);
+console.log('Store paths:\n' + store_path_org1 + '\n' + store_path_org2 + '\n' + store_path_org3);
+
 var tx_id = null;
 
+
+const org1Peer = fabric_client.newPeer(orgs[0].url);
+const org2Peer = fabric_client.newPeer(orgs[1].url);
+const org3Peer = fabric_client.newPeer(orgs[2].url);
+channel_12.addPeer(org1Peer);
+//channel_12.addPeer(org2Peer);
+channel_23.addPeer(org2Peer);
+channel_23.addPeer(org3Peer);
+
+console.log('Querying channel-12 on org1 with org1\'s user');
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
-Fabric_Client.newDefaultKeyValueStore({ path: store_path
+Fabric_Client.newDefaultKeyValueStore({ path: store_path_org1
 }).then((state_store) => {
-	// assign the store to the fabric client
 	fabric_client.setStateStore(state_store);
 	var crypto_suite = Fabric_Client.newCryptoSuite();
-	// use the same location for the state store (where the users' certificate are kept)
-	// and the crypto store (where the users' keys are kept)
-	var crypto_store = Fabric_Client.newCryptoKeyStore({path: store_path});
+	var crypto_store = Fabric_Client.newCryptoKeyStore({path: store_path_org1});
 	crypto_suite.setCryptoKeyStore(crypto_store);
 	fabric_client.setCryptoSuite(crypto_suite);
-
-	// get the enrolled user from persistence, this user will sign all requests
 	return fabric_client.getUserContext('user1', true);
 }).then((user_from_store) => {
 	if (user_from_store && user_from_store.isEnrolled()) {
-		console.log('--> Successfully loaded user1 from persistence');
-		member_user = user_from_store;
+		console.log('--> Successfully loaded user1 for org1 from persistence');
+		org1_user = user_from_store;
 	} else {
-		throw new Error('--> !Failed to get user1.... run registerUser.js');
+		throw new Error('--> !Failed to get user1 for org1.... run registerUser.js');
 	}
 
-	// queryCar chaincode function - requires 1 argument, ex: args: ['CAR4'],
-	// queryAllCars chaincode function - requires no arguments , ex: args: [''],
-	const request = {
-		//targets : --- letting this default to the peers assigned to the channel
-		chaincodeId: 'fabcar',
-		fcn: 'queryAllCars',
-		args: ['']
-	};
-
-	// send the query proposal to the peer
-	return channel_a.queryByChaincode(request);
+	return channel_12.queryByChaincode(request);
 }).then((query_responses) => {
-	console.log("--> Query to 'channel-a' has completed, checking results");
+	console.log(`--> Query to channel-12 has completed, checking results`);
 	// query_responses could have more than one  results if there multiple peers were used as targets
 	if (query_responses && query_responses.length == 1) {
 		if (query_responses[0] instanceof Error) {
@@ -102,19 +80,30 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 		}
 	} else {
 		console.log("--> No payloads were returned from query");
+	}
+	
+	// create user1 for org2
+	return Fabric_Client.newDefaultKeyValueStore({ path: store_path_org2});
+}).then(state_store => {	
+	fabric_client.setStateStore(state_store);
+	var crypto_suite = Fabric_Client.newCryptoSuite();
+	var crypto_store = Fabric_Client.newCryptoKeyStore({path: store_path_org2});
+	crypto_suite.setCryptoKeyStore(crypto_store);
+	fabric_client.setCryptoSuite(crypto_suite);
+	return fabric_client.getUserContext('user1', true);
+}).then((user_from_store) => {
+	if (user_from_store && user_from_store.isEnrolled()) {
+		console.log('--> Successfully loaded user1 for org2 from persistence');
+		org2_user = user_from_store;
+	} else {
+		throw new Error('--> !Failed to get user1 for org2.... run registerUser.js');
 	}
 
-	// queryCar chaincode function - requires 1 argument, ex: args: ['CAR4'],
-	// queryAllCars chaincode function - requires no arguments , ex: args: [''],
-	const request = {
-		//targets : --- letting this default to the peers assigned to the channel
-		chaincodeId: 'fabcar',
-		fcn: 'queryAllCars',
-		args: ['']
-	};
-	return channel_b.queryByChaincode(request);
-}).then(query_responses => {
-	console.log("--> Query to 'channel-b' has completed, checking results");
+	//return channel_12.queryByChaincode(request);
+	console.log('Querying channel-12 on org2 with org2\'s user.');
+	return channel_12.queryByChaincode(request);
+}).then((query_responses) => {
+	console.log(`--> Query to channel-12 has completed, checking results`);
 	// query_responses could have more than one  results if there multiple peers were used as targets
 	if (query_responses && query_responses.length == 1) {
 		if (query_responses[0] instanceof Error) {
@@ -125,6 +114,9 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 	} else {
 		console.log("--> No payloads were returned from query");
 	}
+	
+	// create user1 for org2
+	return Fabric_Client.newDefaultKeyValueStore({ path: store_path_org2});
 }).catch((err) => {
 	console.error('--> !Failed to query successfully :: ' + err);
 });

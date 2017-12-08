@@ -76,7 +76,7 @@ services:
         - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/:/etc/hyperledger/msp/orderer
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/hyperledger/msp/peerorg1
         - ./crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/:/etc/hyperledger/msp/peerorg2
-        - ./crypto-config/peerOrganizations/org3.example.com/peers/peer0.org2.example.com/:/etc/hyperledger/msp/peerorg2       
+        - ./crypto-config/peerOrganizations/org3.example.com/peers/peer0.org2.example.com/:/etc/hyperledger/msp/peerorg3      
     networks:
       - basic
 
@@ -166,7 +166,7 @@ services:
       - CORE_PEER_ID=peer0.org3.example.com
       - CORE_LOGGING_PEER=debug
       - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_LOCALMSPID=Org3MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
       - CORE_PEER_ADDRESS=peer0.org3.example.com:7051
       # # the following setting starts chaincode containers on the same
