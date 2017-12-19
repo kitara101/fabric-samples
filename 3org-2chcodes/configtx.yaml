@@ -24,6 +24,7 @@ Profiles:
                 Organizations:
                     - *Org1
                     - *Org2
+                    - *Org4
             Consortium23:
                 Organizations:
                     - *Org2
@@ -35,6 +36,7 @@ Profiles:
             Organizations:
                 - *Org1
                 - *Org2
+                - *Org4
 
             
     Channel-23:
@@ -118,6 +120,23 @@ Organizations:
             # encoded in the genesis block in the Application section context
             - Host: peer0.org3.example.com
               Port: 7051
+    
+    - &Org4
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: Org4MSP
+
+        # ID to load the MSP definition as
+        ID: Org4MSP
+
+        MSPDir: crypto-config/peerOrganizations/org4.example.com/msp
+
+        AnchorPeers:
+            # AnchorPeers defines the location of peers which can be used
+            # for cross org gossip communication.  Note, this value is only
+            # encoded in the genesis block in the Application section context
+            #- Host: peer0.org3.example.com
+            #  Port: 7051
 ################################################################################
 #
 #   SECTION: Orderer

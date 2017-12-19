@@ -8,31 +8,35 @@
  * Register and Enroll a user
  */
 
-var config = [
-    {
+var config = {
+    org1: {
         ca_port: 7054,
         ca_name: 'ca.org1.example.com',
         msp:  'Org1MSP'
     },
-    {
+    org2: {
         ca_port: 7055,
         ca_name: 'ca.org2.example.com',
         msp:  'Org2MSP'
-    }    
-];
+    },
+    org3: {
+        ca_port: 7056,
+        ca_name: 'ca.org3.example.com',
+        msp:  'Org3MSP'
+    } 
+};
 
 let [,, org] = process.argv;
 if (typeof (org) === "undefined" ) {
     console.log("Organization not specified, assuming 'org1'");
     org = "org1";
-} else if (org !== "org1" && org !== "org2") {
+} else if (org !== "org1" && org !== "org2" && org !== "org3") {
     console.log(`Expecting 'org1' or 'org2', got ${org}. Assuming 'org1`);
     org = "rg1";
 } 
 
 const Org = 'O' + org.substr(1);
-const i = (org == "org1" ? 0 : 1);
-const {ca_port: caPort, ca_name: caName, msp: mspName} = config[i];
+const {ca_port: caPort, ca_name: caName, msp: mspName} = config[org];
 
 var Fabric_Client = require('fabric-client');
 var Fabric_CA_Client = require('fabric-ca-client');
