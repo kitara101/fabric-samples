@@ -20,3 +20,8 @@ node registerUser.js org3
 node query.js channel-12 org1 org1
 node query.js channel-12 org2 org1
 node query.js channel-23 org2 org3
+
+node enrollAdmin.js org4
+node registerUser.js org4
+node enrollAdmin.js org5
+node registerUser.js org5

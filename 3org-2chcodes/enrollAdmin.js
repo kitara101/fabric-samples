@@ -30,12 +30,12 @@ var config = {
     },
     org4: {
         ca_port: 7057,
-        ca_name: 'SomeOrg4',
+        ca_name: 'Org4',
         msp:  'Org4MSP'
     }, 
     org5: {
         ca_port: 7057,
-        ca_name: 'SomeOrg5',
+        ca_name: 'Org5',
         msp:  'Org5MSP'
     }
 };
