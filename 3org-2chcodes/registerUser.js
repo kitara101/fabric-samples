@@ -23,6 +23,16 @@ var config = {
         ca_port: 7056,
         ca_name: 'ca.org3.example.com',
         msp:  'Org3MSP'
+    },
+    org4: {
+        ca_port: 7057,
+        ca_name: 'SomeOrg4',
+        msp:  'Org4MSP'
+    },
+    org5: {
+        ca_port: 7057,
+        ca_name: 'SomeOrg5',
+        msp:  'Org5MSP'
     } 
 };
 
@@ -30,9 +40,6 @@ let [,, org] = process.argv;
 if (typeof (org) === "undefined" ) {
     console.log("Organization not specified, assuming 'org1'");
     org = "org1";
-} else if (org !== "org1" && org !== "org2" && org !== "org3") {
-    console.log(`Expecting 'org1' or 'org2', got ${org}. Assuming 'org1`);
-    org = "rg1";
 } 
 
 const Org = 'O' + org.substr(1);
@@ -69,7 +76,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
     	verify: false
     };
     // be sure to change the http to https when the CA is running TLS enabled
-    fabric_ca_client = new Fabric_CA_Client(`http://localhost:${caPort}`, null , '', crypto_suite);
+    fabric_ca_client = new Fabric_CA_Client(`http://localhost:${caPort}`, null , caName, crypto_suite);
 
     // first check to see if the admin is already enrolled
     return fabric_client.getUserContext('admin', true);

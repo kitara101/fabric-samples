@@ -11,12 +11,12 @@ if [ !  -d ./node_modules ]; then
 fi
 
 
-#node enrollAdmin.js org1
-#node registerUser.js org1
-#node enrollAdmin.js org2
-#node registerUser.js org2
-#node enrollAdmin.js org3
-#node registerUser.js org3
-#node query.js org1
-#node query.js org2
-#node query.js org2
+node enrollAdmin.js org1
+node registerUser.js org1
+node enrollAdmin.js org2
+node registerUser.js org2
+node enrollAdmin.js org3
+node registerUser.js org3
+node query.js channel-12 org1 org1
+node query.js channel-12 org2 org1
+node query.js channel-23 org2 org3

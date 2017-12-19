@@ -17,18 +17,20 @@ ORG2=$5
 echo "===> Deploying ${CONSORCIUM}."
 . ./lib/create_channel.sh $CHANNEL $ORG1
 . ./lib/join_channel.sh $CHANNEL $ORG1
-
 # deploy chaincode on peer
 . ./lib/deploy_chaincode.sh $CHAINCODE $ORG1  
+# deploy chaincode on peer
+if [ "$ORG2" == "Org3" ]; then
+    . ./lib/deploy_chaincode.sh $CHAINCODE $ORG2  
+fi
+ . ./lib/join_channel.sh $CHANNEL $ORG2 
+
 # isntantiate to channel
 . ./lib/instantiate_chaincode.sh $CHAINCODE $CHANNEL $ORG1 "OR ('${ORG1}MSP.member','${ORG2}MSP.member')"
 # populate with initial data
 . ./lib/init_chaincode.sh $CHAINCODE $CHANNEL $ORG1 
 
 
-# deploy chaincode on peer
-if [ "$ORG2" == "Org3" ]; then
-    . ./lib/deploy_chaincode.sh $CHAINCODE $ORG2  
-fi
- . ./lib/join_channel.sh $CHANNEL $ORG2 
+
+
  echo "===> Consorcium ${CONSORCIUM} deployed."

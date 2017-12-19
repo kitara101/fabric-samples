@@ -12,36 +12,42 @@ var path = require('path');
 var util = require('util');
 var os = require('os');
 
-var config = [
-    {
+var config = {
+    org1: {
         ca_port: 7054,
         ca_name: 'ca.org1.example.com',
         msp:  'Org1MSP'
     },
-    {
+    org2: {
         ca_port: 7055,
         ca_name: 'ca.org2.example.com',
         msp:  'Org2MSP'
     },   
-    {
+    org3: {
         ca_port: 7056,
         ca_name: 'ca.org3.example.com',
         msp:  'Org3MSP'
-    } 
-];
+    },
+    org4: {
+        ca_port: 7057,
+        ca_name: 'SomeOrg4',
+        msp:  'Org4MSP'
+    }, 
+    org5: {
+        ca_port: 7057,
+        ca_name: 'SomeOrg5',
+        msp:  'Org5MSP'
+    }
+};
 
 let [,, org] = process.argv;
 if (typeof (org) === "undefined" ) {
     console.log("Organization not specified, assuming 'org1'");
     org = "org1";
-} else if (org !== "org1" && org !== "org2" && org !== "org3") {
-    console.log(`Expecting 'org1', 'org2' or 'org3', got ${org}. Assuming 'org1`);
-    org = "rg1";
 } 
 
 const Org = 'O' + org.substr(1);
-const i = (org == "org1" ? 0 : (org == "org2" ? 1: 2) );
-const {ca_port: caPort, ca_name: caName, msp: mspName} = config[i];
+const {ca_port: caPort, ca_name: caName, msp: mspName} = config[org];
 
 
 var Fabric_Client = require('fabric-client');
@@ -73,7 +79,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
     	verify: false
     };
     // be sure to change the http to https when the CA is running TLS enabled
-    fabric_ca_client = new Fabric_CA_Client(`http://localhost:${caPort}`, tlsOptions , `ca.${org}.example.com`, crypto_suite);
+    fabric_ca_client = new Fabric_CA_Client(`http://localhost:${caPort}`, tlsOptions , config[org].ca_name, crypto_suite);
 
     // first check to see if the admin is already enrolled
     return fabric_client.getUserContext('admin', true);

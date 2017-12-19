@@ -77,7 +77,7 @@ tls:
 #############################################################################
 ca:
   # Name of this CA
-  name: SomeOrg4
+  name: SomeOrg5
   # Key file (default: ca-key.pem)
   keyfile: ca-key.pem
   # Certificate file (default: ca-cert.pem)
@@ -164,7 +164,7 @@ ldap:
 #  Affiliation section
 #############################################################################
 affiliations:
-   org4:
+   org5:
       - department1
       - department2
 
@@ -214,15 +214,14 @@ signing:
 #     CA certificates though it can still issue end entity certificates.
 ###########################################################################
 csr:
-   cn: SomeOrg4
+   cn: SomeOrg5
    names:
       - C: RU
         ST: "Moscow"
         L:
-        O: SomeOrg4
+        O: SomeOrg5
         OU: CA
    hosts:
-     - 424d3bbcf5a8
      - localhost
    ca:
       expiry: 131400h

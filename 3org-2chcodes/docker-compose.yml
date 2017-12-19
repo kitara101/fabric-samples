@@ -60,6 +60,21 @@ services:
     networks:
       - basic
 
+  ca.tlabel.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.tlabel.example.com
+    ports:
+      - "7057:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d --cafiles ca/ca1/fabric-ca-config.yaml --cafiles ca/ca2/fabric-ca-config.yaml'
+    volumes:
+      - ./resource/org4-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca1/fabric-ca-config.yaml:ro
+      - ./resource/org5-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca2/fabric-ca-config.yaml:ro
+    container_name: ca.tlabel.com
+    networks:
+      - basic  
+
   orderer.example.com:
     container_name: orderer.example.com
     image: hyperledger/fabric-orderer
