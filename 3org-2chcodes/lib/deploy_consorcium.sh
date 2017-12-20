@@ -23,7 +23,7 @@ echo "===> Deploying ${CONSORCIUM}."
 if [ "$ORG2" == "Org3" ]; then
     . ./lib/deploy_chaincode.sh $CHAINCODE $ORG2  
 fi
- . ./lib/join_channel.sh $CHANNEL $ORG2 
+. ./lib/join_channel.sh $CHANNEL $ORG2 
 
 # isntantiate to channel
 . ./lib/instantiate_chaincode.sh $CHAINCODE $CHANNEL $ORG1 "OR ('${ORG1}MSP.member','${ORG2}MSP.member')"
