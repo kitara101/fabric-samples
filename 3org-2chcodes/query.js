@@ -34,8 +34,23 @@ let config = {
 		url: "grpc://localhost:0000",
 		msp: "Org4MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/org4')
+	},
+	org5: {	
+		userOrg: "org5",
+		url: "grpc://localhost:0000",
+		msp: "Org5MSP",
+		storePath: path.join(__dirname, 'hfc-key-store/org5')
 	}
 };
+
+let [,, channelName, userOrg, peerOrg] = process.argv;
+//const userOrg = "org3"; 
+//const peerOrg = "org1";
+const storePath = config[userOrg].storePath;
+const peer = fabric_client.newPeer(config[peerOrg].url);
+const channel = (channelName === "channel-12" ? channel_12 : channel_23);
+channel.addPeer(peer);
+
 
 const request = {
 	//targets : --- letting this default to the peers assigned to the channel
@@ -46,16 +61,6 @@ const request = {
 
 
 let user = null;
-
-
-let [,, channelName, userOrg, peerOrg] = process.argv;
-//const userOrg = "org3"; 
-//const peerOrg = "org1";
-const storePath = config[userOrg].storePath;
-const peer = fabric_client.newPeer(config[peerOrg].url);
-const channel = (channelName === "channel-12" ? channel_12 : channel_23);
-channel.addPeer(peer);
-
 console.log(`\n[ Querying \"${channel.getName()}\", user -> ${userOrg}, peer -> ${peerOrg} ]\n`);
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
 Fabric_Client.newDefaultKeyValueStore({ path: storePath
