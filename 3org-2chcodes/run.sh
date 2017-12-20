@@ -2,6 +2,8 @@
 
 ./start.sh $1
 
+exit
+
 if [ "$?" -ne 0 ]; then
     exit 1
 fi

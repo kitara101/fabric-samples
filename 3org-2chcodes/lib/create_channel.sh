@@ -8,5 +8,11 @@
 CHANNEL=$1
 ORG=$2
 
+DOMAIN=${ORG}
+
+if [ "$DOMAIN" == "TLabel" ]; then
+    DOMAIN="tracelabel"
+fi
+
 echo "-----> Creating channel '$CHANNEL'."
-docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${ORG,}.example.com/msp" peer0.${ORG,}.example.com peer channel create -o orderer.example.com:7050 -c $CHANNEL -f /etc/hyperledger/configtx/$CHANNEL.tx
+docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${DOMAIN,}.com/msp" peer0.${DOMAIN,}.com peer channel create -o orderer-1.tracelabel.com:7050 -c $CHANNEL -f /etc/hyperledger/configtx/$CHANNEL.tx

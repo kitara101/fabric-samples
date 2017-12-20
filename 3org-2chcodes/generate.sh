@@ -37,47 +37,62 @@ if [ "$?" -ne 0 ]; then
   exit 1
 fi
 
-echo "-----> Generating channel confiruation for '$CHANNEL_12'."
-# generate CHANNEL_12 configuration transaction
-configtxgen -profile Channel-12 -outputCreateChannelTx ./config/$CHANNEL_12.tx -channelID $CHANNEL_12
+echo "-----> Generating channel confiruation for '$CHANNEL_1'."
+# generate CHANNEL_1 configuration transaction
+configtxgen -profile Channel-1 -outputCreateChannelTx ./config/$CHANNEL_1.tx -channelID $CHANNEL_1
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate channel configuration transaction..."
   exit 1
 fi
 
-echo "-----> Generating anchor peers configuration for '$CHANNEL_12'."
+echo "-----> Generating anchor peers configuration for '$CHANNEL_1'."
 # generate anchor peer transaction
-configtxgen -profile Channel-12 -outputAnchorPeersUpdate ./config/Org1MSPanchors_$CHANNEL_12.tx -channelID $CHANNEL_12 -asOrg Org1
+configtxgen -profile Channel-1 -outputAnchorPeersUpdate ./config/Anchors_$CHANNEL_1.tx -channelID $CHANNEL_1 -asOrg TLabel
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate anchor peer update for Org1MSP..."
   exit 1
 fi
 
 
-echo "-----> Generating channel confiruation for '$CHANNEL_23'."
+echo "-----> Generating channel confiruation for '$CHANNEL_2'."
 # generate CHANNEL_12 configuration transaction
-configtxgen -profile Channel-23 -outputCreateChannelTx ./config/$CHANNEL_23.tx -channelID $CHANNEL_23
+configtxgen -profile Channel-2 -outputCreateChannelTx ./config/$CHANNEL_2.tx -channelID $CHANNEL_2
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate channel configuration transaction..."
   exit 1
 fi
 
-echo "-----> Generating anchor peers configuration for '$CHANNEL_23'."
+echo "-----> Generating anchor peers configuration for '$CHANNEL_2'."
 # generate anchor peer transaction
-configtxgen -profile Channel-23 -outputAnchorPeersUpdate ./config/Org2MSPanchors_$CHANNEL_23.tx -channelID $CHANNEL_23 -asOrg Org2
+configtxgen -profile Channel-2 -outputAnchorPeersUpdate ./config/Anchors_$CHANNEL_2.tx -channelID $CHANNEL_2 -asOrg TLabel
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate anchor peer update for Org1MSP..."
   exit 1
 fi
 
+echo "-----> Generating channel confiruation for '$CHANNEL_2'."
+# generate CHANNEL_12 configuration transaction
+configtxgen -profile Channel-2 -outputCreateChannelTx ./config/$CHANNEL_3.tx -channelID $CHANNEL_3
+if [ "$?" -ne 0 ]; then
+  echo "Failed to generate channel configuration transaction..."
+  exit 1
+fi
+
+echo "-----> Generating anchor peers configuration for '$CHANNEL_3'."
+# generate anchor peer transaction
+configtxgen -profile Channel-3 -outputAnchorPeersUpdate ./config/Anchors_$CHANNEL_3.tx -channelID $CHANNEL_3 -asOrg TLabel
+if [ "$?" -ne 0 ]; then
+  echo "Failed to generate anchor peer update for Org1MSP..."
+  exit 1
+fi
 
 echo "-----> Updating docker environment."
-CA_CRYPTO_DIR=./crypto-config/peerOrganizations/org1.example.com/ca
-CA_ORG1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org1.example.com/ca | grep _sk)
-CA_ORG2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org2.example.com/ca | grep _sk)
-CA_ORG3_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org3.example.com/ca | grep _sk)
-CA_ORG4_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org4.example.com/ca | grep _sk)
-CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org5.example.com/ca | grep _sk)
+CA_TLABEL_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/tracelabel.com/ca | grep _sk)
+CA_BRAND_1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand-1.com/ca | grep _sk)
+CA_BRAND_2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand-2.com/ca | grep _sk)
+CA_BRAND_3_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand-3.com/ca | grep _sk)
+#CA_ORG4_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org4.example.com/ca | grep _sk)
+#CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org5.example.com/ca | grep _sk)
 
 # keep original env file
 #if [ ! -e  ./.env_orig ]; then
@@ -85,10 +100,11 @@ CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org5.example.com/
 #fi 
 
 cp ./.env_base ./.env
-echo CA_ORG1_PRIVATE_KEY=${CA_ORG1_PRIVATE_KEY} >> ./.env
-echo CA_ORG2_PRIVATE_KEY=${CA_ORG2_PRIVATE_KEY} >> ./.env
-echo CA_ORG3_PRIVATE_KEY=${CA_ORG3_PRIVATE_KEY} >> ./.env
-echo CA_ORG4_PRIVATE_KEY=${CA_ORG4_PRIVATE_KEY} >> ./.env
-echo CA_ORG5_PRIVATE_KEY=${CA_ORG5_PRIVATE_KEY} >> ./.env
+echo CA_TLABEL_PRIVATE_KEY=${CA_TLABEL_PRIVATE_KEY} >> ./.env
+echo CA_BRAND_1_PRIVATE_KEY=${CA_BRAND_1_PRIVATE_KEY} >> ./.env
+echo CA_BRAND_2_PRIVATE_KEY=${CA_BRAND_2_PRIVATE_KEY} >> ./.env
+echo CA_BRAND_3_PRIVATE_KEY=${CA_BRAND_3_PRIVATE_KEY} >> ./.env
+#echo CA_ORG4_PRIVATE_KEY=${CA_ORG4_PRIVATE_KEY} >> ./.env
+#echo CA_ORG5_PRIVATE_KEY=${CA_ORG5_PRIVATE_KEY} >> ./.env
 
 echo "===> Fabric configuraiton is genereated."
