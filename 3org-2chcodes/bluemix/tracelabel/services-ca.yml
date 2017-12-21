@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tracelabel-ca
+  labels:
+    app: tracelabel
+    org: tracelabel
+    node: ca
+    tier: middle
+spec:
+  ports:
+    - port: 5984
+  selector:
+    app: tracelabel
+    org: tracelabel
+    node: ca
+    tier: middle
+  clusterIP: None
+
+---
+apiVersion: apps/v1beta1 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: ca
+  labels:
+    app: tracelabel
+    org: tracelabel
+    node: ca
+    tier: middle
+spec:
+  selector:
+    matchLabels:
+      app: tracelabel
+      org: tracelabel
+      node: ca
+      tier: middle
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: tracelabel
+        org: tracelabel
+        node: ca
+        tier: middle
+    spec:
+      containers:
+      - image: registry.au-syd.bluemix.net/tlabel/fabric-ca:latest
+        name: fabric-ca
+        env:
+        - name: FABRIC_CA_HOME
+          value: /etc/hyperledger/fabric-ca-server
+        - name: FABRIC_CA_SERVER_CA_NAME
+          value: ca.tracelabel.com
+        - name: FABRIC_CA_SERVER_CA_CERTFILE
+          value: /etc/hyperledger/fabric-ca-server-config/ca.tracelabel.com-cert.pem
+        - name: FABRIC_CA_SERVER_CA_KEYFILE
+          value: /etc/hyperledger/fabric-ca-server-config/528302063e6bc713d8be304cca0e3db766cc8aa9f0a966c4f99735cae94bec7e_sk
+        ports:
+        - containerPort: 7054
+          name: ca
+        volumeMounts:
+        - name: ca-msp
+          mountPath: /etc/hyperledger/fabric-ca-server-config
+          readOnly: true
+      volumes:
+      - name: ca-msp
+        secret:
+          secretName: tracelabel-ca

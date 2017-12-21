@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderer
+  labels:
+    app: tracelabel
+    org: tracelabel
+    node: orderer
+    tier: middle
+spec:
+  ports:
+    - port: 5984
+  selector:
+    app: tracelabel
+    org: tracelabel
+    node: orderer
+    tier: middle
+  clusterIP: None
+
+---
+apiVersion: apps/v1beta1 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: orderer
+  labels:
+    app: tracelabel
+    org: tracelabel
+    node: orderer
+    tier: middle
+spec:
+  selector:
+    matchLabels:
+      app: tracelabel
+      org: tracelabel
+      node: orderer
+      tier: middle
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: tracelabel
+        org: tracelabel
+        node: orderer
+        tier: middle
+    spec:
+      containers:
+      - image: registry.au-syd.bluemix.net/tlabel/fabric-orderer:latest
+        name: fabric-orderer
+        env:
+        - name: ORDERER_GENERAL_LOGLEVEL
+          value: debug
+        - name: ORDERER_GENERAL_LISTENADDRESS
+          value: 0.0.0.0
+        - name: ORDERER_GENERAL_GENESISMETHOD
+          value: file
+        - name: ORDERER_GENERAL_GENESISFILE
+          value: /etc/hyperledger/configtx/genesis.block
+        - name: ORDERER_GENERAL_LOCALMSPID
+          value: TraceLabelMSP
+        - name: ORDERER_GENERAL_LOCALMSPDIR
+          value: /etc/hyperledger/msp/orderer/msp
+        ports:
+        - containerPort: 7050
+          name: orderer
+        volumeMounts:
+        - name: config
+          mountPath: /etc/hyperledger/configtx
+          readOnly: true
+        - name: msp
+          mountPath: /etc/hyperledger/msp/orderer
+          readOnly: true
+      volumes:
+      - name: config
+        secret:
+          secretName: orderer-block
+      - name: msp
+        secret:
+          secretName: orderer-msp
+          items:
+          - key: orderer.tracelabel.com-cert.pem
+            path: msp/signcerts/orderer.tracelabel.com-cert.pem
+          - key: e414400d0f12b4d731fff4af130715341f7ae2d977b63a2fcbafe28c4a8ccbc4_sk
+            path: msp/keystore/e414400d0f12b4d731fff4af130715341f7ae2d977b63a2fcbafe28c4a8ccbc4_sk
+          - key: ca.tracelabel.com-cert.pem
+            path: msp/cacerts/ca.tracelabel.com-cert.pem
+          - key: tlsca.tracelabel.com-cert.pem
+            path: msp/tlscacerts/tlsca.tracelabel.com-cert.pem
+          - key: admin_cert
+            path: msp/admincerts/Admin@tracelabel.com-cert.pem
+

@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: brand1-couchdb
+  name: tracelabel-couchdb
   labels:
-    app: fabcar
-    org: brand1
+    app: tracelabel
+    org: tracelabel
     node: peer
     tier: db
 spec:
   ports:
     - port: 5984
   selector:
-    app: fabcar
-    org: brand1
+    app: tracelabel
+    org: tracelabel
     node: peer
     tier: db
   clusterIP: None
@@ -21,9 +21,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: brand1-db-pv-claim
+  name: tracelabel-db-pv-claim
   labels:
-    app: fabcar
+    app: tracelabel
     org: brand1
     node: peer
     tier: db
@@ -39,15 +39,15 @@ kind: Deployment
 metadata:
   name: couchdb
   labels:
-    app: fabcar
-    org: brand1
+    app: tracelabel
+    org: tracelabel
     node: peer
     tier: db
 spec:
   selector:
     matchLabels:
-      app: fabcar
-      org: brand1
+      app: tracelabel
+      org: tracelabel
       node: peer
       tier: db
   strategy:
@@ -55,8 +55,8 @@ spec:
   template:
     metadata:
       labels:
-        app: fabcar
-        org: brand1
+        app: tracelabel
+        org: tracelabel
         node: peer
         tier: db
     spec:
@@ -67,12 +67,12 @@ spec:
         - name: COUCHDB_USER
           valueFrom:
             secretKeyRef:
-              name: brand1-peer-db
+              name: tracelabel-peer-db
               key: user
         - name: COUCHDB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: brand1-peer-db
+              name: tracelabel-peer-db
               key: password
         ports:
         - containerPort: 5984
@@ -83,4 +83,4 @@ spec:
       volumes:
       - name: persistent-storage
         persistentVolumeClaim:
-          claimName: brand1-db-pv-claim
+          claimName: tracelabel-db-pv-claim
