@@ -32,8 +32,8 @@ Profiles:
         Application:
             <<: *ApplicationDefaults
             Organizations:
+                - *TraceLabel            
                 - *Brand1
-                - *Brand2
                 - *Org4
 
             
@@ -42,6 +42,7 @@ Profiles:
         Application:
             <<: *ApplicationDefaults
             Organizations:
+                - *TraceLabel
                 - *Brand2
                 - *Org5
 

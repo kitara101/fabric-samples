@@ -15,7 +15,7 @@ services:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.brand1.com
       - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.brand1.com-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_ORG1_PRIVATE_KEY}
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_BRAND1_PRIVATE_KEY}
     ports:
       - "7054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
@@ -32,7 +32,7 @@ services:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.brand2.com
       - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.brand2.com-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_ORG2_PRIVATE_KEY}
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_BRAND2_PRIVATE_KEY}
     ports:
       - "7055:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
@@ -44,22 +44,26 @@ services:
       - basic
 
 
-  ca.tlabel.com:
+  ca.tracelabel.com:
     image: hyperledger/fabric-ca
+    container_name: ca.tracelabel.com
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca.tlabel.example.com
+      - FABRIC_CA_SERVER_CA_NAME=ca.tracelabel.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.tracelabel.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_TRACELABEL_PRIVATE_KEY}
     ports:
       - "7057:7054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d --cafiles ca/ca1/fabric-ca-config.yaml --cafiles ca/ca2/fabric-ca-config.yaml'
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    # sh -c 'fabric-ca-server start -b admin:adminpw -d --cafiles ca/ca1/fabric-ca-config.yaml --cafiles ca/ca2/fabric-ca-config.yaml'
     volumes:
-      - ./resource/org4-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca1/fabric-ca-config.yaml:ro
-      - ./crypto-config/peerOrganizations/org4.example.com/ca/ca.org4.example.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca1/ca-cert.pem:ro
-      - ./crypto-config/peerOrganizations/org4.example.com/ca/${CA_ORG4_PRIVATE_KEY}:/etc/hyperledger/fabric-ca-server/ca/ca1/msp/keystore/${CA_ORG4_PRIVATE_KEY}:ro
-      - ./resource/org5-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca2/fabric-ca-config.yaml:ro
-      - ./crypto-config/peerOrganizations/org5.example.com/ca/ca.org5.example.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca2/ca-cert.pem:ro
-      - ./crypto-config/peerOrganizations/org5.example.com/ca/${CA_ORG5_PRIVATE_KEY}:/etc/hyperledger/fabric-ca-server/ca/ca2/msp/keystore/${CA_ORG5_PRIVATE_KEY}:ro
-    container_name: ca.tlabel.com
+          - ./crypto-config/peerOrganizations/tracelabel.com/ca/:/etc/hyperledger/fabric-ca-server-config
+  #    - ./resource/org4-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca1/fabric-ca-config.yaml:ro
+  #    - ./crypto-config/peerOrganizations/org4.example.com/ca/ca.org4.example.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca1/ca-cert.pem:ro
+  #    - ./crypto-config/peerOrganizations/org4.example.com/ca/${CA_ORG4_PRIVATE_KEY}:/etc/hyperledger/fabric-ca-server/ca/ca1/msp/keystore/${CA_ORG4_PRIVATE_KEY}:ro
+  #    - ./resource/org5-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca2/fabric-ca-config.yaml:ro
+  #    - ./crypto-config/peerOrganizations/org5.example.com/ca/ca.org5.example.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca2/ca-cert.pem:ro
+  #    - ./crypto-config/peerOrganizations/org5.example.com/ca/${CA_ORG5_PRIVATE_KEY}:/etc/hyperledger/fabric-ca-server/ca/ca2/msp/keystore/${CA_ORG5_PRIVATE_KEY}:ro
     networks:
       - basic  
 
@@ -161,6 +165,45 @@ services:
     networks:
       - basic
 
+  peer0.tracelabel.com:
+    container_name: peer0.tracelabel.com
+    image: hyperledger/fabric-peer
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_PEER_ID=peer0.tracelabel.com
+      - CORE_LOGGING_PEER=debug
+      - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_LOCALMSPID=TraceLabelMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
+      - CORE_PEER_ADDRESS=peer0.tracelabel.com:7051
+      # # the following setting starts chaincode containers on the same
+      # # bridge network as the peers
+      # # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=tracelabel.couchdb:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: peer node start
+    # command: peer node start --peer-chaincodedev=true
+    ports:
+      - 7071:7051
+      - 7073:7053
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./crypto-config/peerOrganizations/tracelabel.com/peers/peer0.tracelabel.com/msp:/etc/hyperledger/msp/peer
+        - ./crypto-config/peerOrganizations/tracelabel.com/users:/etc/hyperledger/msp/users
+        - ./config:/etc/hyperledger/configtx
+    depends_on:
+      - orderer.tracelabel.com
+      - tracelabel.couchdb
+    networks:
+      - basic
+
   brand1.couchdb:
     container_name: brand1.couchdb
     image: hyperledger/fabric-couchdb
@@ -186,7 +229,19 @@ services:
       - 6984:5984
     networks:
       - basic
-    
+
+  tracelabel.couchdb:
+    container_name: tracelabel.couchdb
+    image: hyperledger/fabric-couchdb
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 7984:5984
+    networks:
+      - basic    
 
   cli:
     container_name: cli

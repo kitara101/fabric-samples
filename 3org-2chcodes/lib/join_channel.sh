@@ -8,10 +8,13 @@
 CHANNEL=$1
 ORG=$2
 
-
+DOMAIN=$ORG
+if [ "$DOMAIN" == "TraceLabel" ]; then 
+    DOMAIN=tracelabel
+fi
 echo "------> Joining channel '$CHANNEL' by '$ORG's peer0."
-docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${ORG,}.com/msp" peer0.${ORG,}.com peer channel fetch config $CHANNEL.block -o $ORDERER -c $CHANNEL
-docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${ORG,}.com/msp" peer0.${ORG,}.com peer channel join -b $CHANNEL.block
+docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${DOMAIN,}.com/msp" peer0.${DOMAIN,}.com peer channel fetch config $CHANNEL.block -o $ORDERER -c $CHANNEL
+docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${DOMAIN,}.com/msp" peer0.${DOMAIN,}.com peer channel join -b $CHANNEL.block
 
 
 
