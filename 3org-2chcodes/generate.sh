@@ -37,34 +37,34 @@ if [ "$?" -ne 0 ]; then
   exit 1
 fi
 
-echo "-----> Generating channel confiruation for '$CHANNEL_12'."
-# generate CHANNEL_12 configuration transaction
-configtxgen -profile Channel-12 -outputCreateChannelTx ./config/$CHANNEL_12.tx -channelID $CHANNEL_12
+echo "-----> Generating channel confiruation for '$CHANNEL_1'."
+# generate CHANNEL_1 configuration transaction
+configtxgen -profile Channel-1 -outputCreateChannelTx ./config/$CHANNEL_1.tx -channelID $CHANNEL_1
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate channel configuration transaction..."
   exit 1
 fi
 
-echo "-----> Generating anchor peers configuration for '$CHANNEL_12'."
+echo "-----> Generating anchor peers configuration for '$CHANNEL_1'."
 # generate anchor peer transaction
-configtxgen -profile Channel-12 -outputAnchorPeersUpdate ./config/Brand1MSPanchors_$CHANNEL_12.tx -channelID $CHANNEL_12 -asOrg Brand1
+configtxgen -profile Channel-1 -outputAnchorPeersUpdate ./config/Brand1MSPanchors_$CHANNEL_1.tx -channelID $CHANNEL_1 -asOrg Brand1
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate anchor peer update for Brand1MSP..."
   exit 1
 fi
 
 
-echo "-----> Generating channel confiruation for '$CHANNEL_23'."
-# generate CHANNEL_12 configuration transaction
-configtxgen -profile Channel-23 -outputCreateChannelTx ./config/$CHANNEL_23.tx -channelID $CHANNEL_23
+echo "-----> Generating channel confiruation for '$CHANNEL_2'."
+# generate CHANNEL_1 configuration transaction
+configtxgen -profile Channel-2 -outputCreateChannelTx ./config/$CHANNEL_2.tx -channelID $CHANNEL_2
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate channel configuration transaction..."
   exit 1
 fi
 
-echo "-----> Generating anchor peers configuration for '$CHANNEL_23'."
+echo "-----> Generating anchor peers configuration for '$CHANNEL_2'."
 # generate anchor peer transaction
-configtxgen -profile Channel-23 -outputAnchorPeersUpdate ./config/Brand2MSPanchors_$CHANNEL_23.tx -channelID $CHANNEL_23 -asOrg Brand2
+configtxgen -profile Channel-2 -outputAnchorPeersUpdate ./config/Brand2MSPanchors_$CHANNEL_2.tx -channelID $CHANNEL_2 -asOrg Brand2
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate anchor peer update for Brand1MSP..."
   exit 1

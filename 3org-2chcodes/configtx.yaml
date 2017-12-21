@@ -20,19 +20,15 @@ Profiles:
             Organizations:
                 - *TraceLabel
         Consortiums:
-            Consortium12:
+            Brand:
                 Organizations:
                     - *TraceLabel
                     - *Brand1
                     - *Brand2
                     - *Org4
-            Consortium23:
-                Organizations:
-                    - *TraceLabel
-                    - *Brand2
                     - *Org5                  
-    Channel-12:
-        Consortium: Consortium12
+    Channel-1:
+        Consortium: Brand
         Application:
             <<: *ApplicationDefaults
             Organizations:
@@ -41,8 +37,8 @@ Profiles:
                 - *Org4
 
             
-    Channel-23:
-        Consortium: Consortium23
+    Channel-2:
+        Consortium: Brand
         Application:
             <<: *ApplicationDefaults
             Organizations:
