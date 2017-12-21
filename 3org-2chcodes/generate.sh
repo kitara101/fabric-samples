@@ -81,7 +81,7 @@ CA_CRYPTO_DIR=./crypto-config/peerOrganizations/brand1.com/ca
 CA_BRAND1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand1.com/ca | grep _sk)
 CA_BRAND2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand2.com/ca | grep _sk)
 CA_TRACELABEL_PRIVATE_KEY=$(ls -f1 ./crypto-config/ordererOrganizations/tracelabel.com/ca | grep _sk)
-CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org5.example.com/ca | grep _sk)
+CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/distributor2.com/ca | grep _sk)
 
 # keep original env file
 #if [ ! -e  ./.env_orig ]; then

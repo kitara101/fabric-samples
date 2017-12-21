@@ -9,12 +9,12 @@
  */
 
 var config = {
-    org1: {
+    brand1: {
         ca_port: 7054,
         ca_name: 'ca.brand1.com',
         msp:  'Brand1MSP'
     },
-    org2: {
+    brand2: {
         ca_port: 7055,
         ca_name: 'ca.brand2.com',
         msp:  'Brand2MSP'
@@ -24,22 +24,22 @@ var config = {
         ca_name: 'ca.org3.example.com',
         msp:  'Org3MSP'
     },
-    org4: {
+    distributor1: {
         ca_port: 7057,
-        ca_name: 'Org4',
-        msp:  'Org4MSP'
+        ca_name: 'Distributor1',
+        msp:  'Distributor1MSP'
     },
-    org5: {
+    distributor2: {
         ca_port: 7057,
-        ca_name: 'Org5',
-        msp:  'Org5MSP'
+        ca_name: 'Distributor2',
+        msp:  'Distributor2MSP'
     } 
 };
 
 let [,, org] = process.argv;
 if (typeof (org) === "undefined" ) {
-    console.log("Organization not specified, assuming 'org1'");
-    org = "org1";
+    console.log("Organization not specified, assuming 'brand1'");
+    org = "brand1";
 } 
 
 const Org = 'O' + org.substr(1);

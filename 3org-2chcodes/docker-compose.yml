@@ -21,7 +21,7 @@ services:
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
       - ./crypto-config/peerOrganizations/brand1.com/ca/:/etc/hyperledger/fabric-ca-server-config
-      - ./resource/org1-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml:ro
+      - ./resource/brand1-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml:ro
     container_name: ca.brand1.com
     networks:
       - basic
@@ -38,7 +38,7 @@ services:
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
       - ./crypto-config/peerOrganizations/brand2.com/ca/:/etc/hyperledger/fabric-ca-server-config
-      - ./resource/org2-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml:ro
+      - ./resource/brand2-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml:ro
     container_name: ca.brand2.com
     networks:
       - basic
@@ -58,12 +58,12 @@ services:
     # sh -c 'fabric-ca-server start -b admin:adminpw -d --cafiles ca/ca1/fabric-ca-config.yaml --cafiles ca/ca2/fabric-ca-config.yaml'
     volumes:
           - ./crypto-config/peerOrganizations/tracelabel.com/ca/:/etc/hyperledger/fabric-ca-server-config
-  #    - ./resource/org4-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca1/fabric-ca-config.yaml:ro
-  #    - ./crypto-config/peerOrganizations/org4.example.com/ca/ca.org4.example.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca1/ca-cert.pem:ro
-  #    - ./crypto-config/peerOrganizations/org4.example.com/ca/${CA_ORG4_PRIVATE_KEY}:/etc/hyperledger/fabric-ca-server/ca/ca1/msp/keystore/${CA_ORG4_PRIVATE_KEY}:ro
-  #    - ./resource/org5-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca2/fabric-ca-config.yaml:ro
-  #    - ./crypto-config/peerOrganizations/org5.example.com/ca/ca.org5.example.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca2/ca-cert.pem:ro
-  #    - ./crypto-config/peerOrganizations/org5.example.com/ca/${CA_ORG5_PRIVATE_KEY}:/etc/hyperledger/fabric-ca-server/ca/ca2/msp/keystore/${CA_ORG5_PRIVATE_KEY}:ro
+  #    - ./resource/distributor1-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca1/fabric-ca-config.yaml:ro
+  #    - ./crypto-config/peerOrganizations/distributor1.com/ca/ca.distributor1.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca1/ca-cert.pem:ro
+  #    - ./crypto-config/peerOrganizations/distributor1.com/ca/${CA_ORG4_PRIVATE_KEY}:/etc/hyperledger/fabric-ca-server/ca/ca1/msp/keystore/${CA_ORG4_PRIVATE_KEY}:ro
+  #    - ./resource/Distributor2-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca2/fabric-ca-config.yaml:ro
+  #    - ./crypto-config/peerOrganizations/distributor2.example.com/ca/ca.distributor2.example.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca2/ca-cert.pem:ro
+  #    - ./crypto-config/peerOrganizations/distributor2.example.com/ca/${CA_ORG5_PRIVATE_KEY}:/etc/hyperledger/fabric-ca-server/ca/ca2/msp/keystore/${CA_ORG5_PRIVATE_KEY}:ro
     networks:
       - basic  
 

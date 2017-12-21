@@ -77,7 +77,7 @@ tls:
 #############################################################################
 ca:
   # Name of this CA
-  name: Org4
+  name: Distributor1
   # Key file (default: ca-key.pem)
   keyfile: ca-key.pem
   # Certificate file (default: ca-cert.pem)
@@ -164,7 +164,7 @@ ldap:
 #  Affiliation section
 #############################################################################
 affiliations:
-   org4:
+   distributor1:
       - department1
       - department2
 
@@ -214,12 +214,12 @@ signing:
 #     CA certificates though it can still issue end entity certificates.
 ###########################################################################
 csr:
-   cn: Org4
+   cn: Distributor1
    names:
       - C: RU
         ST: "Moscow"
         L:
-        O: Org4
+        O: Distributor1
         OU: CA
    hosts:
      - 424d3bbcf5a8

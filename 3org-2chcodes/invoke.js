@@ -19,19 +19,19 @@ var fabric_client = new Fabric_Client();
 const 	channel_12 = fabric_client.newChannel('channel-1'),
 		channel_23 = fabric_client.newChannel('channel-2');
 let config = {
-	org1: { 
-		userOrg: "org1",
+	brand1: { 
+		userOrg: "brand1",
 		url: "grpc://localhost:7051",
 		url2: "grpc://localhost:7053",
 		msp: "Brand1MSP",
-		storePath: path.join(__dirname, 'hfc-key-store/org1')
+		storePath: path.join(__dirname, 'hfc-key-store/brand1')
 	},
-	org2: {	
-		userOrg: "org2",
+	brand2: {	
+		userOrg: "brand2",
 		url: "grpc://localhost:7061",
 		url2: "grpc://localhost:7063",
 		msp: "Brand2MSP",
-		storePath: path.join(__dirname, 'hfc-key-store/org2')
+		storePath: path.join(__dirname, 'hfc-key-store/brand2')
 	},
 	org3: {	
 		userOrg: "org3",
@@ -40,23 +40,23 @@ let config = {
 		msp: "Org3MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/org3')
 	},
-	org4: {	
-		userOrg: "org4",
+	distributor1: {	
+		userOrg: "distributor1",
 		url: "grpc://localhost:0000",
-		msp: "Org4MSP",
-		storePath: path.join(__dirname, 'hfc-key-store/org4')
+		msp: "Distributor1MSP",
+		storePath: path.join(__dirname, 'hfc-key-store/distributor1')
 	},
-	org5: {	
-		userOrg: "org5",
+	distributor2: {	
+		userOrg: "distributor2",
 		url: "grpc://localhost:0000",
-		msp: "Org5MSP",
-		storePath: path.join(__dirname, 'hfc-key-store/org5')
+		msp: "Distributor2MSP",
+		storePath: path.join(__dirname, 'hfc-key-store/distributor2')
 	}
 };
 
 let [,, channelName, userOrg, peerOrg] = process.argv;
 //const userOrg = "org3"; 
-//const peerOrg = "org1";
+//const peerOrg = "brand1";
 const store_path = config[userOrg].storePath;
 const peerUrl = config[peerOrg].url;
 const peer = fabric_client.newPeer(peerUrl);

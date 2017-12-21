@@ -77,7 +77,7 @@ tls:
 #############################################################################
 ca:
   # Name of this CA
-  name:
+  name: Distributor2
   # Key file (default: ca-key.pem)
   keyfile: ca-key.pem
   # Certificate file (default: ca-cert.pem)
@@ -164,7 +164,7 @@ ldap:
 #  Affiliation section
 #############################################################################
 affiliations:
-   org1:
+   distributor2:
       - department1
       - department2
 
@@ -214,15 +214,14 @@ signing:
 #     CA certificates though it can still issue end entity certificates.
 ###########################################################################
 csr:
-   cn: fabric-ca-server
+   cn: Distributor2
    names:
-      - C: US
-        ST: "North Carolina"
+      - C: RU
+        ST: "Moscow"
         L:
-        O: Hyperledger
-        OU: Fabric
+        O: Distributor2
+        OU: CA
    hosts:
-     - 424d3bbcf5a8
      - localhost
    ca:
       expiry: 131400h

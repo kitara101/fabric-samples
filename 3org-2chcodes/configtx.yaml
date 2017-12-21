@@ -25,8 +25,8 @@ Profiles:
                     - *TraceLabel
                     - *Brand1
                     - *Brand2
-                    - *Org4
-                    - *Org5                  
+                    - *Distributor1
+                    - *Distributor2                  
     Channel-1:
         Consortium: Brand
         Application:
@@ -34,7 +34,7 @@ Profiles:
             Organizations:
                 - *TraceLabel            
                 - *Brand1
-                - *Org4
+                - *Distributor1
 
             
     Channel-2:
@@ -44,7 +44,7 @@ Profiles:
             Organizations:
                 - *TraceLabel
                 - *Brand2
-                - *Org5
+                - *Distributor2
 
 ################################################################################
 #
@@ -104,15 +104,15 @@ Organizations:
               Port: 7051
 
     
-    - &Org4
+    - &Distributor1
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: Org4
+        Name: Distributor1
 
         # ID to load the MSP definition as
-        ID: Org4MSP
+        ID: Distributor1MSP
 
-        MSPDir: crypto-config/peerOrganizations/org4.example.com/msp
+        MSPDir: crypto-config/peerOrganizations/distributor1.com/msp
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
@@ -121,15 +121,15 @@ Organizations:
             #- Host: peer0.org3.example.com
             #  Port: 7051
 
-    - &Org5
+    - &Distributor2
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: Org5
+        Name: Distributor2
 
         # ID to load the MSP definition as
-        ID: Org5MSP
+        ID: Distributor2MSP
 
-        MSPDir: crypto-config/peerOrganizations/org5.example.com/msp
+        MSPDir: crypto-config/peerOrganizations/distributor2.example.com/msp
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used

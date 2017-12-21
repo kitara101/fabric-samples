@@ -62,7 +62,7 @@ PeerOrgs:
     # ---------------------------------------------------------------------------
     # Specs:
     #   - Hostname: foo # implicitly "foo.brand1.com"
-    #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
+    #     CommonName: foo27.distributor2.example.com # overrides Hostname-based FQDN set above
     #   - Hostname: bar
     #   - Hostname: baz
     # ---------------------------------------------------------------------------
@@ -120,7 +120,7 @@ PeerOrgs:
     # ---------------------------------------------------------------------------
     # Specs:
     #   - Hostname: foo # implicitly "foo.brand1.com"
-    #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
+    #     CommonName: foo27.distributor2.example.com # overrides Hostname-based FQDN set above
     #   - Hostname: bar
     #   - Hostname: baz
     # ---------------------------------------------------------------------------
@@ -153,8 +153,8 @@ PeerOrgs:
   # ---------------------------------------------------------------------------   
 
 
-  - Name: Org4
-    Domain: org4.example.com
+  - Name: Distributor1
+    Domain: distributor1.com
         # "CA"
     # ---------------------------------------------------------------------------
     # Uncomment this section to enable the explicit definition of the CA for this
@@ -180,7 +180,7 @@ PeerOrgs:
     # ---------------------------------------------------------------------------
     # Specs:
     #   - Hostname: foo # implicitly "foo.brand1.com"
-    #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
+    #     CommonName: foo27.distributor2.example.com # overrides Hostname-based FQDN set above
     #   - Hostname: bar
     #   - Hostname: baz
     # ---------------------------------------------------------------------------
@@ -207,8 +207,8 @@ PeerOrgs:
     Users:
       Count: 1         
 
-  - Name: Org5
-    Domain: org5.example.com
+  - Name: Distributor2
+    Domain: distributor2.example.com
         # "CA"
     # ---------------------------------------------------------------------------
     # Uncomment this section to enable the explicit definition of the CA for this
@@ -234,7 +234,7 @@ PeerOrgs:
     # ---------------------------------------------------------------------------
     # Specs:
     #   - Hostname: foo # implicitly "foo.brand1.com"
-    #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
+    #     CommonName: foo27.distributor2.example.com # overrides Hostname-based FQDN set above
     #   - Hostname: bar
     #   - Hostname: baz
     # ---------------------------------------------------------------------------

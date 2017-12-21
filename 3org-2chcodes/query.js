@@ -11,17 +11,17 @@ var fabric_client = new Fabric_Client();
 const 	channel_12 = fabric_client.newChannel('channel-1'),
 		channel_23 = fabric_client.newChannel('channel-2');
 let config = {
-	org1: { 
-		userOrg: "org1",
+	brand1: { 
+		userOrg: "brand1",
 		url: "grpc://localhost:7051",
 		msp: "Brand1MSP",
-		storePath: path.join(__dirname, 'hfc-key-store/org1')
+		storePath: path.join(__dirname, 'hfc-key-store/brand1')
 	},
-	org2: {	
-		userOrg: "org2",
+	brand2: {	
+		userOrg: "brand2",
 		url: "grpc://localhost:7061",
 		msp: "Brand2MSP",
-		storePath: path.join(__dirname, 'hfc-key-store/org2')
+		storePath: path.join(__dirname, 'hfc-key-store/brand2')
 	},
 	org3: {	
 		userOrg: "org3",
@@ -29,23 +29,23 @@ let config = {
 		msp: "Org3MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/org3')
 	},
-	org4: {	
-		userOrg: "org4",
+	distributor1: {	
+		userOrg: "distributor1",
 		url: "grpc://localhost:0000",
-		msp: "Org4MSP",
-		storePath: path.join(__dirname, 'hfc-key-store/org4')
+		msp: "Distributor1MSP",
+		storePath: path.join(__dirname, 'hfc-key-store/distributor1')
 	},
-	org5: {	
-		userOrg: "org5",
+	distributor2: {	
+		userOrg: "distributor2",
 		url: "grpc://localhost:0000",
-		msp: "Org5MSP",
-		storePath: path.join(__dirname, 'hfc-key-store/org5')
+		msp: "Distributor2MSP",
+		storePath: path.join(__dirname, 'hfc-key-store/distributor2')
 	}
 };
 
 let [,, channelName, userOrg, peerOrg] = process.argv;
 //const userOrg = "org3"; 
-//const peerOrg = "org1";
+//const peerOrg = "brand1";
 const storePath = config[userOrg].storePath;
 const peer = fabric_client.newPeer(config[peerOrg].url);
 const channel = (channelName === "channel-1" ? channel_12 : channel_23);
@@ -93,7 +93,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: storePath
 		console.log("--> No payloads were returned from query");
 	}
 	
-	// create user1 for org2
+	// create user1 for brand2
 	return;
 }).catch((err) => {
 	console.error('--> !Failed to query successfully :: ' + err);

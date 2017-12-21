@@ -164,7 +164,7 @@ ldap:
 #  Affiliation section
 #############################################################################
 affiliations:
-   org3:
+   brand2:
       - department1
       - department2
 

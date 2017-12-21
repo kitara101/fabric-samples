@@ -5,14 +5,14 @@ metadata:
   name: couchdb
   labels:
     app: fabcar
-    org: org1
+    org: brand1
     node: peer
     tier: db
 spec:
   selector:
     matchLabels:
       app: fabcar
-      org: org1
+      org: brand1
       node: peer
       tier: db
   strategy:
@@ -21,7 +21,7 @@ spec:
     metadata:
       labels:
         app: fabcar
-        org: org1
+        org: brand1
         node: peer
         tier: db
     spec:
@@ -32,12 +32,12 @@ spec:
         - name: COUCHDB_USER
           valueFrom:
             secretKeyRef:
-              name: org1-peer-db
+              name: brand1-peer-db
               key: user
         - name: COUCHDB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: org1-peer-db
+              name: brand1-peer-db
               key: password
         ports:
         - containerPort: 5984
@@ -48,4 +48,4 @@ spec:
       volumes:
       - name: persistent-storage
         persistentVolumeClaim:
-          claimName: org1-peer-pv-claim
+          claimName: brand1-peer-pv-claim
