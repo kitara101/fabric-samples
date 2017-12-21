@@ -75,7 +75,6 @@ echo "-----> Updating docker environment."
 CA_CRYPTO_DIR=./crypto-config/peerOrganizations/org1.example.com/ca
 CA_ORG1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org1.example.com/ca | grep _sk)
 CA_ORG2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org2.example.com/ca | grep _sk)
-CA_ORG3_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org3.example.com/ca | grep _sk)
 CA_ORG4_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org4.example.com/ca | grep _sk)
 CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org5.example.com/ca | grep _sk)
 

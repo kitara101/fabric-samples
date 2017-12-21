@@ -20,9 +20,9 @@ echo "===> Deploying ${CONSORCIUM}."
 # deploy chaincode on peer
 . ./lib/deploy_chaincode.sh $CHAINCODE $ORG1  
 # deploy chaincode on peer
-if [ "$ORG2" == "Org3" ]; then
+#if [ "$ORG2" == "Org3" ]; then
     . ./lib/deploy_chaincode.sh $CHAINCODE $ORG2  
-fi
+#fi
 . ./lib/join_channel.sh $CHANNEL $ORG2 
 
 # isntantiate to channel
