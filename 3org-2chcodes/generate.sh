@@ -47,9 +47,9 @@ fi
 
 echo "-----> Generating anchor peers configuration for '$CHANNEL_12'."
 # generate anchor peer transaction
-configtxgen -profile Channel-12 -outputAnchorPeersUpdate ./config/Org1MSPanchors_$CHANNEL_12.tx -channelID $CHANNEL_12 -asOrg Org1
+configtxgen -profile Channel-12 -outputAnchorPeersUpdate ./config/Brand1MSPanchors_$CHANNEL_12.tx -channelID $CHANNEL_12 -asOrg Brand1
 if [ "$?" -ne 0 ]; then
-  echo "Failed to generate anchor peer update for Org1MSP..."
+  echo "Failed to generate anchor peer update for Brand1MSP..."
   exit 1
 fi
 
@@ -64,17 +64,17 @@ fi
 
 echo "-----> Generating anchor peers configuration for '$CHANNEL_23'."
 # generate anchor peer transaction
-configtxgen -profile Channel-23 -outputAnchorPeersUpdate ./config/Org2MSPanchors_$CHANNEL_23.tx -channelID $CHANNEL_23 -asOrg Org2
+configtxgen -profile Channel-23 -outputAnchorPeersUpdate ./config/Brand2MSPanchors_$CHANNEL_23.tx -channelID $CHANNEL_23 -asOrg Brand2
 if [ "$?" -ne 0 ]; then
-  echo "Failed to generate anchor peer update for Org1MSP..."
+  echo "Failed to generate anchor peer update for Brand1MSP..."
   exit 1
 fi
 
 
 echo "-----> Updating docker environment."
-CA_CRYPTO_DIR=./crypto-config/peerOrganizations/org1.example.com/ca
-CA_ORG1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org1.example.com/ca | grep _sk)
-CA_ORG2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org2.example.com/ca | grep _sk)
+CA_CRYPTO_DIR=./crypto-config/peerOrganizations/brand1.com/ca
+CA_ORG1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand1.com/ca | grep _sk)
+CA_ORG2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand2.com/ca | grep _sk)
 CA_ORG4_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org4.example.com/ca | grep _sk)
 CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org5.example.com/ca | grep _sk)
 

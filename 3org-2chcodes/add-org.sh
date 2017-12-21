@@ -4,7 +4,7 @@
 CONFIG_PATH=./config
 
 cp $CONFIG_PATH/genesis.block $CONFIG_PATH/genesis.block.orig
-#docker exec -e "CORE_PEER_ADDRESS=peer0.org1.example.com:7051" -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp" cli peer channel fetch config  -c testchainid -0 orderer.example.org
+#docker exec -e "CORE_PEER_ADDRESS=peer0.brand1.com:7051" -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/brand1.com/users/Admin@brand1.com/msp" cli peer channel fetch config  -c testchainid -0 orderer.example.org
 
 curl -X POST --data-binary @$CONFIG_PATH/genesis.block.orig http://127.0.0.1:7059/protolator/decode/common.Block | \
 jq .data.data[0].payload.data.config  > $CONFIG_PATH/config_block_orig.json

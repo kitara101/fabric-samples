@@ -11,4 +11,4 @@ CHANNEL=$2
 ORG=$3
 
 echo "-----> Invoking chaincode init fo '$CHAINCODE' in channel '$CHANNEL' of $ORG's peer0."
-docker exec -e "CORE_PEER_ADDRESS=peer0.${ORG,}.example.com:7051" -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${ORG,}.example.com/users/Admin@${ORG,}.example.com/msp" cli peer chaincode invoke -o $ORDERER -C $CHANNEL -n $CHAINCODE -c '{"function":"initLedger","Args":[""]}'
+docker exec -e "CORE_PEER_ADDRESS=peer0.${ORG,}.com:7051" -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${ORG,}.com/users/Admin@${ORG,}.com/msp" cli peer chaincode invoke -o $ORDERER -C $CHANNEL -n $CHAINCODE -c '{"function":"initLedger","Args":[""]}'

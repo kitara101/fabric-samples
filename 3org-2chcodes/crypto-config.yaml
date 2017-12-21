@@ -22,17 +22,17 @@ OrdererOrgs:
 # ---------------------------------------------------------------------------
 PeerOrgs:
   # ---------------------------------------------------------------------------
-  # Org1
+  # Brand1
   # ---------------------------------------------------------------------------
-  - Name: Org1
-    Domain: org1.example.com
+  - Name: Brand1
+    Domain: brand1.com
         # "CA"
     # ---------------------------------------------------------------------------
     # Uncomment this section to enable the explicit definition of the CA for this
     # organization.  This entry is a Spec.  See "Specs" section below for details.
     # ---------------------------------------------------------------------------
     CA:
-       Hostname: ca # implicitly org1.example.com
+       Hostname: ca # implicitly brand1.com
     # ---------------------------------------------------------------------------
     # "Specs"
     # ---------------------------------------------------------------------------
@@ -50,7 +50,7 @@ PeerOrgs:
     #                 Org.Domain, respectively.
     # ---------------------------------------------------------------------------
     # Specs:
-    #   - Hostname: foo # implicitly "foo.org1.example.com"
+    #   - Hostname: foo # implicitly "foo.brand1.com"
     #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
     #   - Hostname: bar
     #   - Hostname: baz
@@ -80,17 +80,17 @@ PeerOrgs:
   
   
   # ---------------------------------------------------------------------------
-  # Org2
+  # Brand2
   # ---------------------------------------------------------------------------
-  - Name: Org2
-    Domain: org2.example.com
+  - Name: Brand2
+    Domain: brand2.com
         # "CA"
     # ---------------------------------------------------------------------------
     # Uncomment this section to enable the explicit definition of the CA for this
     # organization.  This entry is a Spec.  See "Specs" section below for details.
     # ---------------------------------------------------------------------------
     CA:
-       Hostname: ca # implicitly org1.example.com
+       Hostname: ca # implicitly brand1.com
     # ---------------------------------------------------------------------------
     # "Specs"
     # ---------------------------------------------------------------------------
@@ -108,7 +108,7 @@ PeerOrgs:
     #                 Org.Domain, respectively.
     # ---------------------------------------------------------------------------
     # Specs:
-    #   - Hostname: foo # implicitly "foo.org1.example.com"
+    #   - Hostname: foo # implicitly "foo.brand1.com"
     #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
     #   - Hostname: bar
     #   - Hostname: baz
@@ -150,7 +150,7 @@ PeerOrgs:
     # organization.  This entry is a Spec.  See "Specs" section below for details.
     # ---------------------------------------------------------------------------
     CA:
-       Hostname: ca # implicitly org1.example.com
+       Hostname: ca # implicitly brand1.com
     # ---------------------------------------------------------------------------
     # "Specs"
     # ---------------------------------------------------------------------------
@@ -168,7 +168,7 @@ PeerOrgs:
     #                 Org.Domain, respectively.
     # ---------------------------------------------------------------------------
     # Specs:
-    #   - Hostname: foo # implicitly "foo.org1.example.com"
+    #   - Hostname: foo # implicitly "foo.brand1.com"
     #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
     #   - Hostname: bar
     #   - Hostname: baz
@@ -204,7 +204,7 @@ PeerOrgs:
     # organization.  This entry is a Spec.  See "Specs" section below for details.
     # ---------------------------------------------------------------------------
     CA:
-       Hostname: ca # implicitly org1.example.com
+       Hostname: ca # implicitly brand1.com
     # ---------------------------------------------------------------------------
     # "Specs"
     # ---------------------------------------------------------------------------
@@ -222,7 +222,7 @@ PeerOrgs:
     #                 Org.Domain, respectively.
     # ---------------------------------------------------------------------------
     # Specs:
-    #   - Hostname: foo # implicitly "foo.org1.example.com"
+    #   - Hostname: foo # implicitly "foo.brand1.com"
     #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
     #   - Hostname: bar
     #   - Hostname: baz

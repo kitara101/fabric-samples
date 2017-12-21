@@ -15,13 +15,13 @@ var os = require('os');
 var config = {
     org1: {
         ca_port: 7054,
-        ca_name: 'ca.org1.example.com',
-        msp:  'Org1MSP'
+        ca_name: 'ca.brand1.com',
+        msp:  'Brand1MSP'
     },
     org2: {
         ca_port: 7055,
-        ca_name: 'ca.org2.example.com',
-        msp:  'Org2MSP'
+        ca_name: 'ca.brand2.com',
+        msp:  'Brand2MSP'
     },   
     org3: {
         ca_port: 7056,

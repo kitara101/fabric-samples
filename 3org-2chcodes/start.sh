@@ -31,9 +31,9 @@ fi
 . ./.env
 
 echo "===> Starting docker conainers."
-#ca.org1.example.com orderer.example.com
+#ca.brand1.com orderer.example.com
 docker-compose up -d 
-#ca.org1.example.com ca.org2.example.com ca.org3.example.com orderer.example.com peer0.org1.example.com peer0.org2.example.com org1.couchdb org2.couchdb
+#ca.brand1.com ca.brand2.com ca.org3.example.com orderer.example.com peer0.brand1.com peer0.brand2.com org1.couchdb org2.couchdb
 echo "===> Containers up."
 # wait for Hyperledger Fabric to start
 echo "===> Waiting ${FABRIC_START_TIMEOUT} seconds for Fabric to start."

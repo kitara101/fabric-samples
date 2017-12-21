@@ -23,14 +23,14 @@ let config = {
 		userOrg: "org1",
 		url: "grpc://localhost:7051",
 		url2: "grpc://localhost:7053",
-		msp: "Org1MSP",
+		msp: "Brand1MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/org1')
 	},
 	org2: {	
 		userOrg: "org2",
 		url: "grpc://localhost:7061",
 		url2: "grpc://localhost:7063",
-		msp: "Org2MSP",
+		msp: "Brand2MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/org2')
 	},
 	org3: {	
