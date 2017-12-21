@@ -27,6 +27,12 @@ if [ "$?" -ne 0 ]; then
   exit 1
 fi
 
+
+echo "copying"
+cp -v ./crypto-config/peerOrganizations/brand1.com/msp/cacerts/* ./crypto-config/ordererOrganizations/tracelabel.com/orderers/orderer.tracelabel.com/msp/cacerts/ 
+cp -v ./crypto-config/peerOrganizations/brand1.com/msp/cacerts/* /home/admin/hyperledger/fabric-samples/3org-2chcodes/crypto-config/peerOrganizations/tracelabel.com/peers/orderer.tracelabel.com/msp/cacerts/ 
+
+
 echo "===> Generating Fabric configuration."
 echo "-----> Generating genesis block."
 # generate genesis block for orderer
@@ -78,19 +84,11 @@ if [ "$?" -ne 0 ]; then
   exit 1
 fi
 
-echo "-----> Generating anchor peers configuration for '$CHANNEL_3'."
-# generate anchor peer transaction
-configtxgen -profile Channel-3 -outputAnchorPeersUpdate ./config/Anchors_$CHANNEL_3.tx -channelID $CHANNEL_3 -asOrg TLabel
-if [ "$?" -ne 0 ]; then
-  echo "Failed to generate anchor peer update for Org1MSP..."
-  exit 1
-fi
-
 echo "-----> Updating docker environment."
 CA_TLABEL_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/tracelabel.com/ca | grep _sk)
-CA_BRAND_1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand-1.com/ca | grep _sk)
-CA_BRAND_2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand-2.com/ca | grep _sk)
-CA_BRAND_3_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand-3.com/ca | grep _sk)
+CA_BRAND_1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand1.com/ca | grep _sk)
+CA_BRAND_2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand2.com/ca | grep _sk)
+#CA_BRAND_3_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand-3.com/ca | grep _sk)
 #CA_ORG4_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org4.example.com/ca | grep _sk)
 #CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/org5.example.com/ca | grep _sk)
 
@@ -103,7 +101,7 @@ cp ./.env_base ./.env
 echo CA_TLABEL_PRIVATE_KEY=${CA_TLABEL_PRIVATE_KEY} >> ./.env
 echo CA_BRAND_1_PRIVATE_KEY=${CA_BRAND_1_PRIVATE_KEY} >> ./.env
 echo CA_BRAND_2_PRIVATE_KEY=${CA_BRAND_2_PRIVATE_KEY} >> ./.env
-echo CA_BRAND_3_PRIVATE_KEY=${CA_BRAND_3_PRIVATE_KEY} >> ./.env
+#echo CA_BRAND_3_PRIVATE_KEY=${CA_BRAND_3_PRIVATE_KEY} >> ./.env
 #echo CA_ORG4_PRIVATE_KEY=${CA_ORG4_PRIVATE_KEY} >> ./.env
 #echo CA_ORG5_PRIVATE_KEY=${CA_ORG5_PRIVATE_KEY} >> ./.env
 

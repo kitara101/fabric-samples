@@ -15,7 +15,10 @@ if [ "$DOMAIN" == "TLabel" ]; then
 fi
 
 echo "------> Joining channel '$CHANNEL' by '$ORG's peer0."
+echo docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${DOMAIN,}.com/msp" peer0.${DOMAIN,}.com peer channel fetch config $CHANNEL.block -o $ORDERER -c $CHANNEL
 docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${DOMAIN,}.com/msp" peer0.${DOMAIN,}.com peer channel fetch config $CHANNEL.block -o $ORDERER -c $CHANNEL
+
+echo docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${DOMAIN,}.com/msp" peer0.${DOMAIN,}.com peer channel join -b $CHANNEL.block
 docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${DOMAIN,}.com/msp" peer0.${DOMAIN,}.com peer channel join -b $CHANNEL.block
 
 

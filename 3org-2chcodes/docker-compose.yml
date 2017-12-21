@@ -10,7 +10,7 @@ networks:
 
 services:
   orderer.tracelabel.com:
-    container_name: orderer-1.tracelabel.com
+    container_name: orderer.tracelabel.com
     image: hyperledger/fabric-orderer
     environment:
       - ORDERER_GENERAL_LOGLEVEL=debug
@@ -25,10 +25,9 @@ services:
       - 7050:7050
     volumes:
         - ./config/:/etc/hyperledger/configtx
-        - ./crypto-config/peerOrganizations/tracelabel.com/peers/orderer-1.tracelabel.com:/etc/hyperledger/msp/orderer
-        - ./crypto-config/peerOrganizations/brand-1.com/peers/peer0.brand-1.com/:/etc/hyperledger/msp/peerbrand-1
-        - ./crypto-config/peerOrganizations/brand-2.com/peers/peer0.brand-2.com/:/etc/hyperledger/msp/peerbrand-2
-        - ./crypto-config/peerOrganizations/brand-3.com/peers/peer0.brand-3.com/:/etc/hyperledger/msp/peerbrand-3      
+        - /home/admin/hyperledger/fabric-samples/3org-2chcodes/crypto-config/peerOrganizations/tracelabel.com/peers/orderer.tracelabel.com:/etc/hyperledger/msp/orderer
+        - ./crypto-config/peerOrganizations/brand1.com/peers/peer0.brand1.com/:/etc/hyperledger/msp/peerbrand1
+        - ./crypto-config/peerOrganizations/brand2.com/peers/peer0.brand2.com/:/etc/hyperledger/msp/peerbrand2    
     networks:
       - basic
 
@@ -48,51 +47,35 @@ services:
     networks:
       - basic
 
-  ca.brand-1.com:
+  ca.brand1.com:
     image: hyperledger/fabric-ca
-    container_name: ca.brand-1.com
+    container_name: ca.brand1.com
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.tracelabel.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.brand-1.com-cert.pem
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.brand1.com-cert.pem
       - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_BRAND_1_PRIVATE_KEY}
     ports:
       - "7064:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ./crypto-config/peerOrganizations/brand-1.com/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ./crypto-config/peerOrganizations/brand1.com/ca/:/etc/hyperledger/fabric-ca-server-config
     networks:
       - basic   
 
-  ca.brand-2.com:
+  ca.brand2.com:
     image: hyperledger/fabric-ca
-    container_name: ca.brand-2.com
+    container_name: ca.brand2.com
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.tracelabel.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.brand-2.com-cert.pem
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.brand2.com-cert.pem
       - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_BRAND_2_PRIVATE_KEY}
     ports:
       - "7074:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ./crypto-config/peerOrganizations/brand-2.com/ca/:/etc/hyperledger/fabric-ca-server-config
-    networks:
-      - basic 
-
-  ca.brand-3.com:
-    image: hyperledger/fabric-ca
-    container_name: ca.brand-3.com
-    environment:
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca.tracelabel.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.brand-3.com-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_BRAND_3_PRIVATE_KEY}
-    ports:
-      - "7084:7054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
-    volumes:
-      - ./crypto-config/peerOrganizations/brand-3.com/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ./crypto-config/peerOrganizations/brand2.com/ca/:/etc/hyperledger/fabric-ca-server-config
     networks:
       - basic 
 
@@ -132,23 +115,23 @@ services:
     networks:
       - basic
 
-  peer0.brand-1.com:
-    container_name: peer0.brand-1.com
+  peer0.brand1.com:
+    container_name: peer0.brand1.com
     image: hyperledger/fabric-peer
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_PEER_ID=peer0.brand-1.com
+      - CORE_PEER_ID=peer0.brand1.com
       - CORE_LOGGING_PEER=debug
       - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
       - CORE_PEER_LOCALMSPID=TLabelMSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
-      - CORE_PEER_ADDRESS=peer0.brand-1.com:7051
+      - CORE_PEER_ADDRESS=peer0.brand1.com:7051
       # # the following setting starts chaincode containers on the same
       # # bridge network as the peers
       # # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.brand-1.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.brand1.com:5984
       - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
@@ -159,32 +142,32 @@ services:
       - 7063:7053
     volumes:
         - /var/run/:/host/var/run/
-        - ./crypto-config/peerOrganizations/brand-1.com/peers/peer0.brand-1.com/msp:/etc/hyperledger/msp/peer
-        - ./crypto-config/peerOrganizations/brand-1.com/users:/etc/hyperledger/msp/users
+        - ./crypto-config/peerOrganizations/brand1.com/peers/peer0.brand1.com/msp:/etc/hyperledger/msp/peer
+        - ./crypto-config/peerOrganizations/brand1.com/users:/etc/hyperledger/msp/users
         - ./config:/etc/hyperledger/configtx
     depends_on:
       - orderer.tracelabel.com
-      - couchdb.brand-1.com
+      - couchdb.brand1.com
     networks:
       - basic
 
-  peer0.brand-2.com:
-    container_name: peer0.brand-2.com
+  peer0.brand2.com:
+    container_name: peer0.brand2.com
     image: hyperledger/fabric-peer
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_PEER_ID=peer0.brand-2.com
+      - CORE_PEER_ID=peer0.brand2.com
       - CORE_LOGGING_PEER=debug
       - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_LOCALMSPID=Brand-2MSP
+      - CORE_PEER_LOCALMSPID=Brand2MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
-      - CORE_PEER_ADDRESS=peer0.brand-2.com:7051
+      - CORE_PEER_ADDRESS=peer0.brand2.com:7051
       # # the following setting starts chaincode containers on the same
       # # bridge network as the peers
       # # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.brand-2.com:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.brand2.com:5984
       - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
@@ -195,50 +178,15 @@ services:
       - 7073:7053
     volumes:
         - /var/run/:/host/var/run/
-        - ./crypto-config/peerOrganizations/brand-2.com/peers/peer0.brand-2.com/msp:/etc/hyperledger/msp/peer
-        - ./crypto-config/peerOrganizations/brand-2.com/users:/etc/hyperledger/msp/users
+        - ./crypto-config/peerOrganizations/brand2.com/peers/peer0.brand2.com/msp:/etc/hyperledger/msp/peer
+        - ./crypto-config/peerOrganizations/brand2.com/users:/etc/hyperledger/msp/users
         - ./config:/etc/hyperledger/configtx
     depends_on:
       - orderer.tracelabel.com
-      - couchdb.brand-2.com
+      - couchdb.brand2.com
     networks:
       - basic 
-
-  peer0.brand-3.com:
-    container_name: peer0.brand-3.com
-    image: hyperledger/fabric-peer
-    environment:
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_PEER_ID=peer0.brand-3.com
-      - CORE_LOGGING_PEER=debug
-      - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_LOCALMSPID=Brand-3MSP
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
-      - CORE_PEER_ADDRESS=peer0.brand-3.com:7051
-      # # the following setting starts chaincode containers on the same
-      # # bridge network as the peers
-      # # https://docs.docker.com/compose/networking/
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.brand-3.com:5984
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
-    command: peer node start
-    # command: peer node start --peer-chaincodedev=true
-    ports:
-      - 7081:7051
-      - 7083:7053
-    volumes:
-        - /var/run/:/host/var/run/
-        - ./crypto-config/peerOrganizations/brand-3.com/peers/peer0.brand-3.com/msp:/etc/hyperledger/msp/peer
-        - ./crypto-config/peerOrganizations/brand-3.com/users:/etc/hyperledger/msp/users
-        - ./config:/etc/hyperledger/configtx
-    depends_on:
-      - orderer.tracelabel.com
-      - couchdb.brand-3.com
-    networks:
-      - basic    
+      
 
   couchdb.tracelabel.com:
     container_name: couchdb.tracelabel.com
@@ -251,8 +199,9 @@ services:
     networks:
       - basic
 
-  couchdb.brand-1.com:
-    container_name: couchdb.brand-1.com
+
+  couchdb.brand1.com:
+    container_name: couchdb.brand1.com
     image: hyperledger/fabric-couchdb
     environment:
       - COUCHDB_USER=
@@ -262,8 +211,9 @@ services:
     networks:
       - basic
 
-  couchdb.brand-2.com:
-    container_name: couchdb.brand-2.com
+
+  couchdb.brand2.com:
+    container_name: couchdb.brand2.com
     image: hyperledger/fabric-couchdb
     environment:
       - COUCHDB_USER=
@@ -273,16 +223,6 @@ services:
     networks:
       - basic
 
-  couchdb.brand-3.com:
-    container_name: couchdb.brand-3.com
-    image: hyperledger/fabric-couchdb
-    environment:
-      - COUCHDB_USER=
-      - COUCHDB_PASSWORD=
-    ports:
-      - 5987:5984
-    networks:
-      - basic
 
   cli:
     container_name: cli

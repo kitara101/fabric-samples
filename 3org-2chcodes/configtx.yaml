@@ -20,44 +20,38 @@ Profiles:
             Organizations:
                 - *TLabel
         Consortiums:
-            Default:
+            Brand1:
                 Organizations:
                     - *TLabel
-                    - *Brand-1
-                    - *Brand-2
-                    - *Brand-3
+                    - *Brand1
                     - *Distributor-1
                     - *Distributor-2
-                    - *Distributor-3
+            Brand2:
+                Organizations:
+                    - *TLabel
+                    - *Brand2
+                    - *Distributor-1
+                    - *Distributor-2
                  
     Channel-1:
-        Consortium: Default
+        Consortium: Brand1
         Application:
             <<: *ApplicationDefaults
             Organizations:
                 - *TLabel
-                - *Brand-1
+                - *Brand1
                 - *Distributor-1
                 - *Distributor-2
-                - *Distributor-3
+
     Channel-2:
-        Consortium: Default
+        Consortium: Brand2
         Application:
             <<: *ApplicationDefaults
             Organizations:
                 - *TLabel
-                - *Brand-2
-                - *Distributor-1
+                - *Brand2
                 - *Distributor-2
-    Channel-3:
-        Consortium: Default
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - *TLabel
-                - *Brand-3
-                - *Distributor-1
-                - *Distributor-3
+
 
 ################################################################################
 #
@@ -80,37 +74,25 @@ Organizations:
         # MSPDir is the filesystem path which contains the MSP configuration
         MSPDir: crypto-config/peerOrganizations/tracelabel.com/msp
 
-    - &Brand-1
-        # DefaultOrg defines the organization which is used in the sampleconfig
-        # of the fabric.git development environment
-        Name: Org1
+    - &Brand1
+        Name: Brand1
+        ID: Brand1MSP
 
-        # ID to load the MSP definition as
-        ID: Brand-1MSP
-
-        MSPDir: crypto-config/peerOrganizations/brand-1.com/msp
+        MSPDir: crypto-config/peerOrganizations/brand1.com/msp
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peer0.brand-1.com
+            - Host: peer0.brand1.com
               Port: 7051
 
-    - &Brand-2
-        Name: Brand-2
-        ID: Brand-2MSP
-        MSPDir: crypto-config/peerOrganizations/brand-2.com/msp
+    - &Brand2
+        Name: Brand2
+        ID: Brand2MSP
+        MSPDir: crypto-config/peerOrganizations/brand2.com/msp
         AnchorPeers:
-            - Host: peer0.brand-2.com
-              Port: 7051
-
-    - &Brand-3
-        Name: Brand-3
-        ID: Brand-3MSP
-        MSPDir: crypto-config/peerOrganizations/brand-3.com/msp
-        AnchorPeers:
-            - Host: peer0.brand-3.com
+            - Host: peer0.brand2.com
               Port: 7051
  
     - &Distributor-1
@@ -129,13 +111,6 @@ Organizations:
             - Host: peer0.distributor-2.com
               Port: 7051 
     
-    - &Distributor-3
-        Name: Distributor-3
-        ID: Distributor-3MSP
-        MSPDir: crypto-config/peerOrganizations/distributor-3.com/msp
-        AnchorPeers:
-            - Host: peer0.distributor-3.com
-              Port: 7051 
 ################################################################################
 #
 #   SECTION: Orderer
@@ -180,7 +155,6 @@ Orderer: &OrdererDefaults
     # Organizations is the list of orgs which are defined as participants on
     # the orderer side of the network
     Organizations:
-        - Name: TLabel
 
 ################################################################################
 #
