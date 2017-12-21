@@ -8,8 +8,8 @@ var os = require('os');
 //
 var fabric_client = new Fabric_Client();
 // setup the fabric network 
-const 	channel_12 = fabric_client.newChannel('channel-12'),
-		channel_23 = fabric_client.newChannel('channel-23');
+const 	channel_12 = fabric_client.newChannel('channel-1'),
+		channel_23 = fabric_client.newChannel('channel-2');
 let config = {
 	org1: { 
 		userOrg: "org1",
@@ -48,7 +48,7 @@ let [,, channelName, userOrg, peerOrg] = process.argv;
 //const peerOrg = "org1";
 const storePath = config[userOrg].storePath;
 const peer = fabric_client.newPeer(config[peerOrg].url);
-const channel = (channelName === "channel-12" ? channel_12 : channel_23);
+const channel = (channelName === "channel-1" ? channel_12 : channel_23);
 channel.addPeer(peer);
 
 

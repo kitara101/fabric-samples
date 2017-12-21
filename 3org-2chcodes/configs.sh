@@ -1,5 +1,5 @@
 #!/bin/bash
 
-FABRIC_CFG_PATH=. configtxgen -channelID channel-12 -inspectBlock ./config/genesis.block -profile ThreeOrgOrdererGenesis > ./config/genesis.config
-FABRIC_CFG_PATH=. configtxgen -channelID channel-12 -inspectChannelCreateTx ./config/channel-12.tx -profile ThreeOrgOrdererGenesis > ./config/channel-12.config
+FABRIC_CFG_PATH=. configtxgen -channelID channel-1 -inspectBlock ./config/genesis.block -profile ThreeOrgOrdererGenesis > ./config/genesis.config
+FABRIC_CFG_PATH=. configtxgen -channelID channel-1 -inspectChannelCreateTx ./config/channel-1.tx -profile ThreeOrgOrdererGenesis > ./config/channel-1.config
 

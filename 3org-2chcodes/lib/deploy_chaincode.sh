@@ -10,9 +10,19 @@ ORG=$2
 
 echo "-----> Deploying chaincode '$CHAINCODE' to $ORG's peer0."
 DOMAIN=$ORG
-if [ "$DOMAIN" == "TraceLabel" ]; then 
+if [ "$ORG" == "TraceLabel" ]; then 
     DOMAIN=tracelabel
 fi
 
-docker exec -e "CORE_PEER_ADDRESS=peer0.${DOMAIN,}.com:7051" -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${DOMAIN,}.com/users/Admin@${DOMAIN,}.com/msp" cli peer chaincode install -n $CHAINCODE -v 1.0 -p github.com/$CHAINCODE
+if [ "$ORG" != "TraceLabel"  ] || [ -z "$TL_DEPLOYED" ]; then 
+    echo Deploying...
+    echo     docker exec -e "CORE_PEER_ADDRESS=peer0.${DOMAIN,}.com:7051" -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${DOMAIN,}.com/users/Admin@${DOMAIN,}.com/msp" cli peer chaincode install -n $CHAINCODE -v 1.0 -p github.com/$CHAINCODE
+ 
+    docker exec -e "CORE_PEER_ADDRESS=peer0.${DOMAIN,}.com:7051" -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${DOMAIN,}.com/users/Admin@${DOMAIN,}.com/msp" cli peer chaincode install -n $CHAINCODE -v 1.0 -p github.com/$CHAINCODE
+    
+    if [ "$ORG" == "TraceLabel" ]; then 
+        TL_DEPLOYED=1
+    fi
+fi 
+
 
