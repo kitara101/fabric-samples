@@ -14,7 +14,7 @@ if [ -f ./.env ]; then
 fi
 
 # remove previous crypto material and config transactions
-if [ ! -d ./config ]; then 
+if [ ! -d ./config ]; then
   mkdir ./config
 fi
 
@@ -81,12 +81,12 @@ CA_CRYPTO_DIR=./crypto-config/peerOrganizations/brand1.com/ca
 CA_BRAND1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand1.com/ca | grep _sk)
 CA_BRAND2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand2.com/ca | grep _sk)
 CA_TRACELABEL_PRIVATE_KEY=$(ls -f1 ./crypto-config/ordererOrganizations/tracelabel.com/ca | grep _sk)
-CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/distributor2.com/ca | grep _sk)
+#CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/distributor2.com/ca | grep _sk)
 
 # keep original env file
 #if [ ! -e  ./.env_orig ]; then
  # cp .env .env_orig
-#fi 
+#fi
 
 cp ./.env_base ./.env
 echo CA_BRAND1_PRIVATE_KEY=${CA_BRAND1_PRIVATE_KEY} >> ./.env

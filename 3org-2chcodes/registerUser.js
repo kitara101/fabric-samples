@@ -25,22 +25,22 @@ var config = {
         msp:  'Org3MSP'
     },
     distributor1: {
-        ca_port: 7057,
-        ca_name: 'Distributor1',
-        msp:  'Distributor1MSP'
+      ca_port: 7058,
+      ca_name: 'ca.distr.tracelabel.com',
+      msp:  'TraceLabelMSP'
     },
     distributor2: {
-        ca_port: 7057,
-        ca_name: 'Distributor2',
-        msp:  'Distributor2MSP'
-    } 
+      ca_port: 7058,
+      ca_name: 'ca.distr.tracelabel.com',
+      msp:  'TraceLabelMSP'
+    }
 };
 
 let [,, org] = process.argv;
 if (typeof (org) === "undefined" ) {
     console.log("Organization not specified, assuming 'brand1'");
     org = "brand1";
-} 
+}
 
 const Org = 'O' + org.substr(1);
 const {ca_port: caPort, ca_name: caName, msp: mspName} = config[org];
@@ -90,7 +90,9 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 
     // at this point we should have the admin user
     // first need to register the user with the CA server
-    return fabric_ca_client.register({enrollmentID: 'user1', affiliation: `${org}.department1`}, admin_user);
+    const aff_root = ( org === "distributor1" ? "distributors-1" : org)
+    const aff_unit = ( org === "distributor1" ? "distributor1" : "department1")
+    return fabric_ca_client.register({enrollmentID: 'user1', affiliation: `${aff_root}.${aff_unit}`}, admin_user);
 }).then((secret) => {
     // next we need to enroll the user with CA server
     console.log('Successfully registered user1 - secret:'+ secret);

@@ -22,16 +22,16 @@ var config = {
         ca_port: 7055,
         ca_name: 'ca.brand2.com',
         msp:  'Brand2MSP'
-    },   
+    },
     distributor1: {
-        ca_port: 7057,
-        ca_name: 'Distributor1',
+        ca_port: 7058,
+        ca_name: 'ca.distr.tracelabel.com',
         msp:  'Distributor1MSP'
-    }, 
+    },
     distributor2: {
-        ca_port: 7057,
-        ca_name: 'Distributor2',
-        msp:  'Distributor2MSP'
+      ca_port: 7058,
+      ca_name: 'ca.distr.tracelabel.com',
+      msp:  'Distributor1MSP'
     }
 };
 
@@ -39,7 +39,7 @@ let [,, org] = process.argv;
 if (typeof (org) === "undefined" ) {
     console.log("Organization not specified, assuming 'brand1'");
     org = "brand1";
-} 
+}
 
 //const Org = 'O' + org.substr(1);
 const {ca_port: caPort, ca_name: caName, msp: mspName} = config[org];
@@ -57,7 +57,7 @@ var store_path = path.join(__dirname, 'hfc-key-store/' + org);
 console.log(' Store path:'+store_path);
 
 
- 
+
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
 Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }).then((state_store) => {

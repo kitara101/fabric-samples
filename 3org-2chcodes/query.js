@@ -7,44 +7,34 @@ var os = require('os');
 
 //
 var fabric_client = new Fabric_Client();
-// setup the fabric network 
+// setup the fabric network
 const 	channel_12 = fabric_client.newChannel('channel-1'),
 		channel_23 = fabric_client.newChannel('channel-2');
 let config = {
-	brand1: { 
+	brand1: {
 		userOrg: "brand1",
 		url: "grpc://localhost:7051",
-		msp: "Brand1MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/brand1')
 	},
-	brand2: {	
+	brand2: {
 		userOrg: "brand2",
 		url: "grpc://localhost:7061",
-		msp: "Brand2MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/brand2')
 	},
-	org3: {	
-		userOrg: "org3",
-		url: "grpc://localhost:7071",
-		msp: "Org3MSP",
-		storePath: path.join(__dirname, 'hfc-key-store/org3')
-	},
-	distributor1: {	
-		userOrg: "distributor1",
-		url: "grpc://localhost:0000",
-		msp: "Distributor1MSP",
+	distributor1: {
+		ca_port: 7058,
+		url: 'grpc://localhost:7071',
 		storePath: path.join(__dirname, 'hfc-key-store/distributor1')
 	},
-	distributor2: {	
-		userOrg: "distributor2",
-		url: "grpc://localhost:0000",
-		msp: "Distributor2MSP",
+	distributor2: {
+		ca_port: 7058,
+		url: 'grpc://localhost:7071',
 		storePath: path.join(__dirname, 'hfc-key-store/distributor2')
 	}
 };
 
 let [,, channelName, userOrg, peerOrg] = process.argv;
-//const userOrg = "org3"; 
+//const userOrg = "org3";
 //const peerOrg = "brand1";
 const storePath = config[userOrg].storePath;
 const peer = fabric_client.newPeer(config[peerOrg].url);
@@ -92,7 +82,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: storePath
 	} else {
 		console.log("--> No payloads were returned from query");
 	}
-	
+
 	// create user1 for brand2
 	return;
 }).catch((err) => {
