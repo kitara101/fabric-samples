@@ -8,7 +8,7 @@
 CHAINCODE=$1
 ORG=$2
 
-echo "${msg}-----> Deploying chaincode '$CHAINCODE' to $ORG's peer0.${reset}"
+echo "${msg_sub}-----> Deploying chaincode '$CHAINCODE' to $ORG's peer0.${reset}"
 DOMAIN=$ORG
 if [ "$ORG" == "TraceLabel" ]; then
     DOMAIN=tracelabel

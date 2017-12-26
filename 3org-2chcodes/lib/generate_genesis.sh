@@ -13,7 +13,7 @@ if [ -f ./.env ]; then
   . ./.env
 fi
 
-echo "${msg}-----> Generating genesis block.${reset}"
+echo "${msg_sub}-----> Generating genesis block.${reset}"
 # generate genesis block for orderer
 configtxgen -profile ThreeOrgOrdererGenesis -outputBlock ./config/genesis.block
 if [ "$?" -ne 0 ]; then

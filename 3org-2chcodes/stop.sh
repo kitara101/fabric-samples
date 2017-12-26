@@ -4,7 +4,7 @@
 
 CONTAINERS=$(docker ps -q)
 if [ -n "$CONTAINERS" ]; then
-    echo "${green}===> Stopping docker containers."
+    echo "${msg}===> Stopping docker containers.${reset}"
     docker-compose stop
-    echo "${green}===> Stopped."
+    echo "${msg}===> Stopped.${reset}"
 fi

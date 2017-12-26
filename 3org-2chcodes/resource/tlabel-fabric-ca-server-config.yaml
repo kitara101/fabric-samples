@@ -166,6 +166,7 @@ ldap:
 affiliations:
   TraceLabel:
     - administration
+    - department1
 
 
 #############################################################################

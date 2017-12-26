@@ -12,12 +12,16 @@ var config = {
     brand1: {
         ca_port: 7054,
         ca_name: 'ca.brand1.com',
-        msp:  'Brand1MSP'
+        msp:  'Brand1MSP',
+        affiliation_root: 'brand1',
+        affiliation: 'department1'
     },
     brand2: {
         ca_port: 7055,
         ca_name: 'ca.brand2.com',
-        msp:  'Brand2MSP'
+        msp:  'Brand2MSP',
+        affiliation_root: 'brand2',
+        affiliation: 'department1'
     },
     org3: {
         ca_port: 7056,
@@ -32,12 +36,21 @@ var config = {
     distributor2: {
       ca_port: 7058,
       ca_name: 'ca.distr.tracelabel.com',
-      msp:  'TraceLabelMSP'
+      msp:  'TraceLabelMSP',
+      affiliation_root: 'admin',
+      affiliation: 'default'
     },
     tracelabel: {
       ca_port: 7057,
       ca_name: 'ca.tracelabel.com',
       msp:  'TraceLabelMSP'
+    },
+    admin_distributors: {
+      ca_port: 7058,
+      ca_name: 'ca.admin.distr.tracelabel.com',
+      msp:  'TraceLabelMSP',
+      affiliation_root: 'administration',
+      affiliation: 'default'
     }
 };
 
@@ -48,7 +61,7 @@ if (typeof (org) === "undefined" ) {
 }
 
 const Org = 'O' + org.substr(1);
-const {ca_port: caPort, ca_name: caName, msp: mspName} = config[org];
+const {ca_port: caPort, ca_name: caName, msp: mspName, affiliation_root: aff_root, affiliation: aff_unit} = config[org];
 
 var Fabric_Client = require('fabric-client');
 var Fabric_CA_Client = require('fabric-ca-client');
@@ -63,6 +76,8 @@ var fabric_ca_client = null;
 var admin_user = null;
 var member_user = null;
 var store_path = path.join(__dirname, 'hfc-key-store/' + org);
+
+console.log(`\n[ Registering 'user1' user for ${org} ]\n`);
 console.log(' Store path:'+store_path);
 
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
@@ -95,8 +110,8 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 
     // at this point we should have the admin user
     // first need to register the user with the CA server
-    const aff_root = ( org === "distributor1" ? "distributors1" : org)
-    const aff_unit = ( org === "distributor1" ? "distributor1" : "department1")
+    // const aff_root = ( org === "distributor1" ? "distributors1" : org)
+    // const aff_unit = ( org === "distributor1" ? "distributor1" : "department1")
     return fabric_ca_client.register({enrollmentID: 'user1', affiliation: `${aff_root}.${aff_unit}`}, admin_user);
 }).then((secret) => {
     // next we need to enroll the user with CA server

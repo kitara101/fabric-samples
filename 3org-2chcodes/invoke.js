@@ -15,47 +15,59 @@ var os = require('os');
 
 //
 var fabric_client = new Fabric_Client();
-// setup the fabric network 
+// setup the fabric network
 const 	channel_12 = fabric_client.newChannel('channel-1'),
 		channel_23 = fabric_client.newChannel('channel-2');
 let config = {
-	brand1: { 
+	brand1: {
 		userOrg: "brand1",
 		url: "grpc://localhost:7051",
 		url2: "grpc://localhost:7053",
 		msp: "Brand1MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/brand1')
 	},
-	brand2: {	
+	brand2: {
 		userOrg: "brand2",
 		url: "grpc://localhost:7061",
 		url2: "grpc://localhost:7063",
 		msp: "Brand2MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/brand2')
 	},
-	org3: {	
+	org3: {
 		userOrg: "org3",
 		url: "grpc://localhost:7071",
 		url2: "grpc://localhost:7073",
 		msp: "Org3MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/org3')
 	},
-	distributor1: {	
+	distributor1: {
 		userOrg: "distributor1",
 		url: "grpc://localhost:0000",
 		msp: "Distributor1MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/distributor1')
 	},
-	distributor2: {	
+	distributor2: {
 		userOrg: "distributor2",
 		url: "grpc://localhost:0000",
 		msp: "Distributor2MSP",
 		storePath: path.join(__dirname, 'hfc-key-store/distributor2')
+	},
+	tracelabel: {
+		url: "grpc://localhost:7071",
+		url2: "grpc://localhost:7073",
+		msp: "TraceLabelMSP",
+		storePath: path.join(__dirname, 'hfc-key-store/tracelabel')
+	},
+	admin_distributors: {
+		url: "grpc://localhost:7071",
+		url2: "grpc://localhost:7073",
+		msp: "TraceLabelMSP",
+		storePath: path.join(__dirname, 'hfc-key-store/admin_distributors')
 	}
 };
 
 let [,, channelName, userOrg, peerOrg] = process.argv;
-//const userOrg = "org3"; 
+//const userOrg = "org3";
 //const peerOrg = "brand1";
 const store_path = config[userOrg].storePath;
 const peerUrl = config[peerOrg].url;

@@ -37,7 +37,13 @@ var config = {
       ca_port: 7057,
       ca_name: 'ca.tracelabel.com',
       msp:  'TraceLabelMSP'
+    },
+    admin_distributors: {
+      ca_port: 7058,
+      ca_name: 'ca.admin.distr.tracelabel.com',
+      msp:  'TraceLabelMSP'
     }
+
 };
 
 let [,, org] = process.argv;
@@ -59,6 +65,8 @@ var fabric_ca_client = null;
 var admin_user = null;
 var member_user = null;
 var store_path = path.join(__dirname, 'hfc-key-store/' + org);
+
+console.log(`\n[ Enrolling admin user for ${org} ]\n`);
 console.log(' Store path:'+store_path);
 
 

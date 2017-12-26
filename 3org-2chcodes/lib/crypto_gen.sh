@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-echo "===> Generating crypto material"
+echo "${msg}===> Generating crypto material${reset}"
 # generate crypto material
 if [ ! -f ./crypto-config/ordererOrganizations/tracelabel.com/ca/ca.tracelabel.com-cert.pem ]; then
   cryptogen generate --config=./crypto-config.yaml
 fi
 if [ "$?" -ne 0 ]; then
-  echo "Failed to generate crypto material..."
+  echo "${err}Failed to generate crypto material...${reset}"
   exit 1
 fi
 
@@ -19,51 +19,55 @@ rm -rf ./crypto-config/peerOrganizations/distributor1.com/msp
 mkdir -p ./crypto-config/peerOrganizations/distributor1.com/msp
 
 #FABRIC_START_TIMEOUT=0
-echo "${msg}-----> Generating intermediate CA for distributors${reset}"
-echo "-----> Adding intermediate CA's to 'TraceLabelMSP'"
+echo "${msg_sub}-----> Generating intermediate CA for distributors${reset}"
+echo "${msg_sub}-----> Adding intermediate CA's to 'TraceLabelMSP'${reset}"
 docker-compose up -d ca.tracelabel.com
 #docker-compose up -d --force-recreate --no-deps ca.cli
-echo "--------> Waiting for 'ca.tracelabel.com' to start"
+echo "--------> Waiting for 'ca.tracelabel.com' to start${reset}"
 sleep $FABRIC_START_TIMEOUT
 docker-compose stop ca.cli
 docker-compose up -d ca.distr.tracelabel.com ca.cli
-echo "--------> Waiting for 'ca.distr.tracelabel.com' to start"
+echo "--------> Waiting for 'ca.distr.tracelabel.com' to start${reset}"
 sleep $FABRIC_START_TIMEOUT
 #docker-compose exec ca.cli mkdir admin
-echo "--------> Enrolling admin"
+echo "--------> Enrolling admin${reset}"
 #docker-compose exec ca.cli export "FABRIC_CA_CLIENT_HOME=$PWD/admin"
 docker-compose exec ca.cli fabric-ca-client enroll -u http://admin:adminpw@ca.distr.tracelabel.com:7054
-echo "--------> Getting intermediate cert chain"
+echo "--------> Getting intermediate cert chain${reset}"
 docker-compose exec ca.cli fabric-ca-client getcacert -u http://admin:adminpw@ca.distr.tracelabel.com:7054 --caname ca.admin.distr.tracelabel.com -M ./tracelabel
 docker-compose exec ca.cli chmod -R a+rwx ./tracelabel
-echo "-----> Done for 'TraceLabelMSP'"
+echo "${msg_sub}-----> Done for 'TraceLabelMSP'${reset}"
 
-echo "-----> Adding intermediate CA's to 'Distributor1MSP'"
-echo "--------> Getting intermediate cert chain"
+echo "${msg_sub}-----> Adding intermediate CA's to 'Distributor1MSP'${reset}"
+echo "--------> Getting intermediate cert chain${reset}"
 docker-compose exec ca.cli fabric-ca-client getcacert -u http://admin:adminpw@ca.distr.tracelabel.com:7054 --caname ca.distr1.distr.tracelabel.com -M ./distr1
-echo "--------> Getting Admin certificate"
+echo "--------> Getting Admin certificate${reset}"
 docker-compose exec ca.cli fabric-ca-client enroll -u http://admin:adminpw@ca.distr.tracelabel.com:7054 --caname ca.distr1.distr.tracelabel.com -M ./distr1/admin
 docker-compose exec ca.cli chmod -R a+rwx ./distr1
 docker-compose exec ca.cli mkdir ./distr1/admincerts
 docker-compose exec ca.cli cp -r ./distr1/admin/signcerts/cert.pem ./distr1/admincerts/
-echo "-----> Done for 'Distributor1MSP'"
+echo "${msg_sub}-----> Done for 'Distributor1MSP'${reset}"
 
-echo "-----> Adding intermediate CA's to 'DistributorsMSP'"
-echo "--------> Getting intermediate cert chain"
+echo "${msg_sub}-----> Adding intermediate CA's to 'DistributorsMSP'${reset}"
+echo "--------> Getting intermediate cert chain${reset}"
 docker-compose exec ca.cli fabric-ca-client getcacert -u http://admin:adminpw@ca.distr.tracelabel.com:7054 --caname ca.admin.distr.tracelabel.com -M ./distributors
 docker-compose exec ca.cli fabric-ca-client getcacert -u http://admin:adminpw@ca.distr.tracelabel.com:7054 --caname ca.distr1.distr.tracelabel.com -M ./distributors
-echo "--------> Getting Admin certificate"
+echo "--------> Getting Admin certificate${reset}"
 docker-compose exec ca.cli fabric-ca-client enroll -u http://admin:adminpw@ca.distr.tracelabel.com:7054 --caname ca.admin.distr.tracelabel.com -M ./distributors/admin
 docker-compose exec ca.cli chmod -R a+rwx ./distributors
 docker-compose exec ca.cli rm  ./distributors/admincerts/Admin@distr.tracelabel.com-cert.pem
 docker-compose exec ca.cli cp -r ./distributors/admin/signcerts/cert.pem ./distributors/admincerts/
-echo "-----> Done for 'DistributorsMSP'"
+echo "${msg_sub}-----> Done for 'DistributorsMSP'${reset}"
 
 
 # copy TraceLabel to peers
+cp -r ./crypto-config/ordererOrganizations/tracelabel.com/msp/intermediatecerts ./crypto-config/ordererOrganizations/tracelabel.com/orderers/peer0.tracelabel.com/msp
+cp -r ./crypto-config/ordererOrganizations/tracelabel.com/msp/cacerts ./crypto-config/ordererOrganizations/tracelabel.com/orderers/peer0.tracelabel.com/msp
 cp -r ./crypto-config/ordererOrganizations/tracelabel.com ./crypto-config/peerOrganizations/
 mkdir -p ./crypto-config/peerOrganizations/tracelabel.com/peers
 cp -r ./crypto-config/peerOrganizations/tracelabel.com/orderers/* ./crypto-config/peerOrganizations/tracelabel.com/peers/
+rm -rf ./crypto-config/peerOrganizations/tracelabel.com/orderers
+# copy intermediate certs to peer
 
 
 # exit

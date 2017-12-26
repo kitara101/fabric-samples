@@ -35,6 +35,10 @@ let config = {
 		ca_port: 7058,
 		url: 'grpc://localhost:7071',
 		storePath: path.join(__dirname, 'hfc-key-store/tracelabel')
+	},
+	admin_distributors: {
+		url: 'grpc://localhost:7071',
+		storePath: path.join(__dirname, 'hfc-key-store/admin_distributors')
 	}
 };
 

@@ -13,5 +13,5 @@ if [ "$DOMAIN" == "TraceLabel" ]; then
     DOMAIN=tracelabel
 fi
 
-echo "${msg}-----> Creating channel '$CHANNEL'.${reset}"
+echo "${msg_sub}-----> Creating channel '$CHANNEL'.${reset}"
 docker exec -e "CORE_PEER_LOCALMSPID=${ORG}MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@${DOMAIN,}.com/msp" peer0.${DOMAIN,}.com peer channel create -o $ORDERER -c $CHANNEL -f /etc/hyperledger/configtx/$CHANNEL.tx
