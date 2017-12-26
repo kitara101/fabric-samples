@@ -77,13 +77,13 @@ tls:
 #############################################################################
 ca:
   # Name of this CA
-  name: ca.distr.tracelabel.com
+  name:
   # Key file (default: ca-key.pem)
   keyfile: ca-key.pem
   # Certificate file (default: ca-cert.pem)
   certfile: ca-cert.pem
   # Chain file (default: chain-cert.pem)
-  chainfile: ca-chain.pem
+  chainfile:
 
 #############################################################################
 #  The registry section controls how the fabric-ca-server does two things:
@@ -164,9 +164,7 @@ ldap:
 #  Affiliation section
 #############################################################################
 affiliations:
-  distributors-1:
-    - distributor1
-    - distributor2
+
 
 
 #############################################################################
@@ -221,13 +219,11 @@ csr:
         ST: Moscow
         L: Moscow
         O: TraceLabel
-        OU: distributors-1
+        OU:
    hosts:
-     - ca.distr.tracelabel.com
-     - localhost
    ca:
       expiry: 131400h
-      pathlength: 1
+      pathlength: 0
 
 #############################################################################
 # BCCSP (BlockChain Crypto Service Provider) section is used to select which
@@ -270,6 +266,9 @@ bccsp:
 cacount:
 
 cafiles:
+  - ca/ca1/fabric-ca-config.yaml
+  - ca/ca2/fabric-ca-config.yaml
+#  - ca/ca3/fabric-ca-config.yaml
 
 #############################################################################
 # Intermediate CA section
@@ -303,13 +302,13 @@ cafiles:
 #############################################################################
 intermediate:
   parentserver:
-    url: http://distributors-1:distributors-1pwd@ca.tracelabel.com:7054
-    caname: ca.tracelabel.com
+    url:
+    caname:
 
   enrollment:
-    hosts: ca.distr.tracelabel.com
-    profile: ca
-    label: ca.distr.tracelabel.com
+    hosts:
+    profile:
+    label:
 
   tls:
     certfiles:

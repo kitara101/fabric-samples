@@ -25,18 +25,20 @@ Profiles:
                     - *TraceLabel
                     - *Brand1
                     - *Brand2
+                    - *Distributors
                     - *Distributor1
-                    - *Distributor2                  
+                    - *Distributor2
     Channel-1:
         Consortium: Brand
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *TraceLabel            
+                - *TraceLabel
                 - *Brand1
+                - *Distributors
                 - *Distributor1
 
-            
+
     Channel-2:
         Consortium: Brand
         Application:
@@ -44,6 +46,7 @@ Profiles:
             Organizations:
                 - *TraceLabel
                 - *Brand2
+                - *Distributors
                 - *Distributor2
 
 ################################################################################
@@ -103,7 +106,23 @@ Organizations:
             - Host: peer0.brand2.com
               Port: 7051
 
-    
+    - &Distributors
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: Distributors
+
+        # ID to load the MSP definition as
+        ID: DistributorsMSP
+
+        MSPDir: crypto-config/peerOrganizations/distr.tracelabel.com/msp
+
+        AnchorPeers:
+            # AnchorPeers defines the location of peers which can be used
+            # for cross org gossip communication.  Note, this value is only
+            # encoded in the genesis block in the Application section context
+            - Host: peer0.distr.tracelabel.com
+              Port: 7051
+
     - &Distributor1
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment

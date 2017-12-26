@@ -26,12 +26,17 @@ var config = {
     distributor1: {
         ca_port: 7058,
         ca_name: 'ca.distr.tracelabel.com',
-        msp:  'Distributor1MSP'
+        msp:  'TraceLabelMSP'
     },
     distributor2: {
       ca_port: 7058,
       ca_name: 'ca.distr.tracelabel.com',
       msp:  'Distributor1MSP'
+    },
+    tracelabel: {
+      ca_port: 7057,
+      ca_name: 'ca.tracelabel.com',
+      msp:  'TraceLabelMSP'
     }
 };
 

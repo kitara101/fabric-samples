@@ -1,0 +1,8 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+OrganizationalUnitIdentifiers:
+  - Certificate: "intermediatecerts/ca-chain.pem"
+    OrganizationalUnitIdentifier: "distributors-1"

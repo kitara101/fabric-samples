@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -e
 #
 # Copyright IBM Corp All Rights Reserved
 #
@@ -19,18 +19,9 @@ if [ ! -d ./config ]; then
 fi
 
 
-echo "===> Generating crypto material"
-# generate crypto material
-cryptogen generate --config=./crypto-config.yaml
-if [ "$?" -ne 0 ]; then
-  echo "Failed to generate crypto material..."
-  exit 1
-fi
+. ./lib/crypto_gen.sh
+. ./lib/set_env.sh
 
-mkdir -p ./crypto-config/peerOrganizations/tracelabel.com/peers
-
-cp -r ./crypto-config/ordererOrganizations/tracelabel.com/*  ./crypto-config/peerOrganizations/tracelabel.com
-cp -r ./crypto-config/peerOrganizations/tracelabel.com/orderers/*  ./crypto-config/peerOrganizations/tracelabel.com/peers
 
 echo "===> Generating Fabric configuration."
 echo "-----> Generating genesis block."
@@ -76,23 +67,6 @@ if [ "$?" -ne 0 ]; then
 fi
 
 
-echo "-----> Updating docker environment."
-CA_CRYPTO_DIR=./crypto-config/peerOrganizations/brand1.com/ca
-CA_BRAND1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand1.com/ca | grep _sk)
-CA_BRAND2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand2.com/ca | grep _sk)
-CA_TRACELABEL_PRIVATE_KEY=$(ls -f1 ./crypto-config/ordererOrganizations/tracelabel.com/ca | grep _sk)
-#CA_ORG5_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/distributor2.com/ca | grep _sk)
 
-# keep original env file
-#if [ ! -e  ./.env_orig ]; then
- # cp .env .env_orig
-#fi
-
-cp ./.env_base ./.env
-echo CA_BRAND1_PRIVATE_KEY=${CA_BRAND1_PRIVATE_KEY} >> ./.env
-echo CA_BRAND2_PRIVATE_KEY=${CA_BRAND2_PRIVATE_KEY} >> ./.env
-echo CA_TRACELABEL_PRIVATE_KEY=${CA_TRACELABEL_PRIVATE_KEY} >> ./.env
-echo CA_ORG4_PRIVATE_KEY=${CA_ORG4_PRIVATE_KEY} >> ./.env
-echo CA_ORG5_PRIVATE_KEY=${CA_ORG5_PRIVATE_KEY} >> ./.env
 
 echo "===> Fabric configuraiton is genereated."

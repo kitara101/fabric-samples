@@ -77,7 +77,7 @@ tls:
 #############################################################################
 ca:
   # Name of this CA
-  name: ca.tracelabel.com
+  name: ca.distr.tracelabel.com
   # Key file (default: ca-key.pem)
   keyfile: ca-key.pem
   # Certificate file (default: ca-cert.pem)
@@ -164,8 +164,10 @@ ldap:
 #  Affiliation section
 #############################################################################
 affiliations:
-  TraceLabel:
+  TraceLabelDistributors:
     - administration
+    - distributor1
+    - distributor2
 
 
 #############################################################################
@@ -193,7 +195,7 @@ signing:
          expiry: 43800h
          caconstraint:
            isca: true
-           maxpathlen: 0
+           maxpathlen: 1
 
 ###########################################################################
 #  Certificate Signing Request (CSR) section.
@@ -219,13 +221,13 @@ csr:
       - C: RU
         ST: Moscow
         L: Moscow
-        O: TraceLabel
+        O: TraceLabelDistributors
         OU:
    hosts:
      - ca.tracelabel.com
    ca:
       expiry: 131400h
-      pathlength: 0
+      pathlength: 1
 
 #############################################################################
 # BCCSP (BlockChain Crypto Service Provider) section is used to select which

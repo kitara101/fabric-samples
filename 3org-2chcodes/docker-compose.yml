@@ -35,7 +35,7 @@ services:
       - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_BRAND2_PRIVATE_KEY}
     ports:
       - "7055:7054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d '
     volumes:
       - ./crypto-config/peerOrganizations/brand2.com/ca/:/etc/hyperledger/fabric-ca-server-config
       - ./resource/brand2-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml:ro
@@ -48,16 +48,28 @@ services:
     container_name: ca.tracelabel.com
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca.tracelabel.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.tracelabel.com-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_TRACELABEL_PRIVATE_KEY}
+#      - FABRIC_CA_SERVER_CA_NAME=ca.tracelabel.com
+#      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.tracelabel.com-cert.pem
+#      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_TRACELABEL_PRIVATE_KEY}
     ports:
       - "7057:7054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d --cafiles ca/ca1/fabric-ca-config.yaml --cafiles ca/ca2/fabric-ca-config.yaml'
     # sh -c 'fabric-ca-server start -b admin:adminpw -d --cafiles ca/ca1/fabric-ca-config.yaml --cafiles ca/ca2/fabric-ca-config.yaml'
     volumes:
-          - ./crypto-config/peerOrganizations/tracelabel.com/ca/:/etc/hyperledger/fabric-ca-server-config
-          - ./resource/tlabel-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml:ro
+          - ./resource/tlabel-default-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml:ro
+          # CA tracelabel.com
+          - ./crypto-config/ordererOrganizations/tracelabel.com/ca/ca.tracelabel.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca1/ca-cert.pem:ro
+          - ./crypto-config/ordererOrganizations/tracelabel.com/ca/ca-key.pem:/etc/hyperledger/fabric-ca-server/ca/ca1/ca-key.pem:ro
+          - ./resource/tlabel-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca1/fabric-ca-config.yaml:ro
+          # CA distr.tracelabel.com
+          - ./crypto-config/peerOrganizations/distr.tracelabel.com/ca/ca.distr.tracelabel.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca2/ca-cert.pem:ro
+          - ./crypto-config/peerOrganizations/distr.tracelabel.com/ca/ca-key.pem:/etc/hyperledger/fabric-ca-server/ca/ca2/ca-key.pem:ro
+          - ./resource/distr-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca2/fabric-ca-config.yaml:ro
+          # CA admin.distr.tracelabel.com
+        #  - ./crypto-config/peerOrganizations/admin.distr.tracelabel.com/ca:/etc/hyperledger/fabric-ca-server/ca/ca3/
+        #  - ./resource/distr-admin-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca3/fabric-ca-config.yaml:ro
+          # - ./crypto-config/peerOrganizations/distr.tracelabel.com/ca/:/etc/hyperledger/fabric-ca-server/ca/ca2:ro
+          # - ./resource/tlabel-distr-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca2/fabric-ca-config.yaml:ro
   #    - ./crypto-config/peerOrganizations/distributor1.com/ca/ca.distributor1.com-cert.pem:/etc/hyperledger/fabric-ca-server/ca/ca1/ca-cert.pem:ro
   #    - ./crypto-config/peerOrganizations/distributor1.com/ca/${CA_ORG4_PRIVATE_KEY}:/etc/hyperledger/fabric-ca-server/ca/ca1/msp/keystore/${CA_ORG4_PRIVATE_KEY}:ro
   #    - ./resource/Distributor2-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca2/fabric-ca-config.yaml:ro
@@ -71,27 +83,43 @@ services:
     container_name: ca.distr.tracelabel.com
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca.distr.tracelabel.com
-      #- FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.distr.tracelabel.com-cert.pem
-      #- FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/${CA_TRACELABEL_PRIVATE_KEY}
     ports:
       - "7058:7054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d -u http://admin:adminpw@ca.tracelabel.com:7054 --intermediate.parentserver.caname ca.tracelabel.com'
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d '
     # sh -c 'fabric-ca-server start -b admin:adminpw -d --cafiles ca/ca1/fabric-ca-config.yaml --cafiles ca/ca2/fabric-ca-config.yaml'
     volumes:
-      - ./resource/tlabel-distr-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml:ro
-      - ./crypto-config/peerOrganizations/tracelabel.com/1:/etc/hyperledger/fabric-ca-server
+          - ./resource/tlabel-default-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml:ro
+          # CA admin.distr.tracelabel.com
+          - ./crypto-config/peerOrganizations/admin.distr.tracelabel.com/ca:/etc/hyperledger/fabric-ca-server/ca/ca1/
+          - ./resource/distr-admin-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca1/fabric-ca-config.yaml:ro
+          # CA distr1.distr.tracelabel.com
+          - ./crypto-config/peerOrganizations/distr1.distr.tracelabel.com/ca:/etc/hyperledger/fabric-ca-server/ca/ca2/
+          - ./resource/distr-distr1-fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/ca/ca2/fabric-ca-config.yaml:ro
     networks:
       - basic
+    depends_on:
+      - ca.tracelabel.com
 
 
   ca.cli:
     image: hyperledger/fabric-ca
     container_name: ca.cli
+    tty: true
     command: bash
+    working_dir: /etc/hyperledger/client
+    environment:
+      - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/client
     # sh -c 'fabric-ca-server start -b admin:adminpw -d --cafiles ca/ca1/fabric-ca-config.yaml --cafiles ca/ca2/fabric-ca-config.yaml'
     volumes:
-          - ./crypto-config/peerOrganizations/tracelabel.com/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ${CA_CLI_PATH}:/etc/hyperledger/client
+      - ./crypto-config/peerOrganizations/distributor1.com/msp:/etc/hyperledger/client/distr1
+      - ./crypto-config/peerOrganizations/distr.tracelabel.com/msp:/etc/hyperledger/client/distributors
+      - ./crypto-config/ordererOrganizations/tracelabel.com/msp:/etc/hyperledger/client/tracelabel
+      - ./resource/fabric-ca-client-config.yaml:/etc/hyperledger/client/fabric-ca-client-config.yaml
+#      - ./crypto-config/peerOrganizations/tracelabel.com/peers/peer0.tracelabel.com/msp:/etc/hyperledger/client/peer0.tracelabel.com
+#      - ./resource/register.peer.tracelabel.sh:/etc/hyperledger/client/register.peer.tracelabel.sh
+    depends_on:
+      - ca.tracelabel.com
     networks:
       - basic
 
@@ -224,8 +252,8 @@ services:
       - 7073:7053
     volumes:
         - /var/run/:/host/var/run/
-        - ./crypto-config/peerOrganizations/tracelabel.com/peers/peer0.tracelabel.com/msp:/etc/hyperledger/msp/peer
-        - ./crypto-config/peerOrganizations/tracelabel.com/users:/etc/hyperledger/msp/users
+        - ./crypto-config/peerOrganizations/tracelabel.com/peers/peer0.tracelabel.com/msp:/etc/hyperledger/msp/peer:ro
+        - ./crypto-config/peerOrganizations/tracelabel.com/users:/etc/hyperledger/msp/users:ro
         - ./config:/etc/hyperledger/configtx
     depends_on:
       - orderer.tracelabel.com

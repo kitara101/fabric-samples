@@ -77,13 +77,13 @@ tls:
 #############################################################################
 ca:
   # Name of this CA
-  name: ca.tracelabel.com
+  name: ca.admin.distr.tracelabel.com
   # Key file (default: ca-key.pem)
   keyfile: ca-key.pem
   # Certificate file (default: ca-cert.pem)
   certfile: ca-cert.pem
   # Chain file (default: chain-cert.pem)
-  chainfile:
+  chainfile: chain-cert.pem
 
 #############################################################################
 #  The registry section controls how the fabric-ca-server does two things:
@@ -164,8 +164,8 @@ ldap:
 #  Affiliation section
 #############################################################################
 affiliations:
-  TraceLabel:
-    - administration
+  administration:
+    - default
 
 
 #############################################################################
@@ -219,10 +219,10 @@ csr:
       - C: RU
         ST: Moscow
         L: Moscow
-        O: TraceLabel
-        OU:
+        O: TraceLabelDistributors
+        OU: administration
    hosts:
-     - ca.tracelabel.com
+     - ca.distr.tracelabel.com
    ca:
       expiry: 131400h
       pathlength: 0
@@ -301,12 +301,12 @@ cafiles:
 #############################################################################
 intermediate:
   parentserver:
-    url:
-    caname:
+    url: http://admin:adminpw@ca.tracelabel.com:7054
+    caname: ca.distr.tracelabel.com
 
   enrollment:
     hosts:
-    profile:
+    profile: ca
     label:
 
   tls:

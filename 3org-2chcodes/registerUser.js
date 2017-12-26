@@ -33,6 +33,11 @@ var config = {
       ca_port: 7058,
       ca_name: 'ca.distr.tracelabel.com',
       msp:  'TraceLabelMSP'
+    },
+    tracelabel: {
+      ca_port: 7057,
+      ca_name: 'ca.tracelabel.com',
+      msp:  'TraceLabelMSP'
     }
 };
 
@@ -90,7 +95,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 
     // at this point we should have the admin user
     // first need to register the user with the CA server
-    const aff_root = ( org === "distributor1" ? "distributors-1" : org)
+    const aff_root = ( org === "distributor1" ? "distributors1" : org)
     const aff_unit = ( org === "distributor1" ? "distributor1" : "department1")
     return fabric_ca_client.register({enrollmentID: 'user1', affiliation: `${aff_root}.${aff_unit}`}, admin_user);
 }).then((secret) => {

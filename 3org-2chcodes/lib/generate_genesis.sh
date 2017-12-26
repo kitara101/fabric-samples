@@ -13,10 +13,10 @@ if [ -f ./.env ]; then
   . ./.env
 fi
 
-echo "-----> Generating genesis block."
+echo "${msg}-----> Generating genesis block.${reset}"
 # generate genesis block for orderer
 configtxgen -profile ThreeOrgOrdererGenesis -outputBlock ./config/genesis.block
 if [ "$?" -ne 0 ]; then
-  echo "Failed to generate orderer genesis block..."
+  echo "${err}Failed to generate orderer genesis block...${reset}"
   exit 1
 fi
