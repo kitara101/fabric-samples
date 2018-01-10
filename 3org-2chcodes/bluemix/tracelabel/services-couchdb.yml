@@ -8,14 +8,16 @@ metadata:
     node: peer
     tier: db
 spec:
+  type: NodePort
   ports:
     - port: 5984
+      nodePort: 30984
   selector:
     app: tracelabel
     org: tracelabel
     node: peer
     tier: db
-  clusterIP: None
+
 
 ---
 apiVersion: v1
@@ -24,7 +26,7 @@ metadata:
   name: tracelabel-db-pv-claim
   labels:
     app: tracelabel
-    org: brand1
+    org: tracelabel
     node: peer
     tier: db
 spec:
@@ -76,7 +78,7 @@ spec:
               key: password
         ports:
         - containerPort: 5984
-          name: couchdb
+          name:
         volumeMounts:
         - name: persistent-storage
           mountPath: /usr/local/var/lib/couchdb

@@ -20,6 +20,7 @@ mkdir -p ./crypto-config/peerOrganizations/distributor1.com/msp
 
 #FABRIC_START_TIMEOUT=0
 echo "${msg_sub}-----> Generating intermediate CA for distributors${reset}"
+### Tracelabel ##########################################################################
 echo "${msg_sub}-----> Adding intermediate CA's to 'TraceLabelMSP'${reset}"
 docker-compose up -d ca.tracelabel.com
 #docker-compose up -d --force-recreate --no-deps ca.cli
@@ -36,8 +37,15 @@ docker-compose exec ca.cli fabric-ca-client enroll -u http://admin:adminpw@ca.di
 echo "--------> Getting intermediate cert chain${reset}"
 docker-compose exec ca.cli fabric-ca-client getcacert -u http://admin:adminpw@ca.distr.tracelabel.com:7054 --caname ca.admin.distr.tracelabel.com -M ./tracelabel
 docker-compose exec ca.cli chmod -R a+rwx ./tracelabel
+# copy TraceLabel to peers
+cp -r ./crypto-config/ordererOrganizations/tracelabel.com/msp/intermediatecerts ./crypto-config/ordererOrganizations/tracelabel.com/orderers/peer0.tracelabel.com/msp
+cp -r ./crypto-config/ordererOrganizations/tracelabel.com/msp/cacerts ./crypto-config/ordererOrganizations/tracelabel.com/orderers/peer0.tracelabel.com/msp
+cp -r ./crypto-config/ordererOrganizations/tracelabel.com ./crypto-config/peerOrganizations/
+mkdir -p ./crypto-config/peerOrganizations/tracelabel.com/peers
+cp -r ./crypto-config/peerOrganizations/tracelabel.com/orderers/* ./crypto-config/peerOrganizations/tracelabel.com/peers/
+rm -rf ./crypto-config/peerOrganizations/tracelabel.com/orderers
 echo "${msg_sub}-----> Done for 'TraceLabelMSP'${reset}"
-
+### Tracelabel ##########################################################################
 echo "${msg_sub}-----> Adding intermediate CA's to 'Distributor1MSP'${reset}"
 echo "--------> Getting intermediate cert chain${reset}"
 docker-compose exec ca.cli fabric-ca-client getcacert -u http://admin:adminpw@ca.distr.tracelabel.com:7054 --caname ca.distr1.distr.tracelabel.com -M ./distr1
@@ -47,7 +55,7 @@ docker-compose exec ca.cli chmod -R a+rwx ./distr1
 docker-compose exec ca.cli mkdir ./distr1/admincerts
 docker-compose exec ca.cli cp -r ./distr1/admin/signcerts/cert.pem ./distr1/admincerts/
 echo "${msg_sub}-----> Done for 'Distributor1MSP'${reset}"
-
+### Tracelabel ##########################################################################
 echo "${msg_sub}-----> Adding intermediate CA's to 'DistributorsMSP'${reset}"
 echo "--------> Getting intermediate cert chain${reset}"
 docker-compose exec ca.cli fabric-ca-client getcacert -u http://admin:adminpw@ca.distr.tracelabel.com:7054 --caname ca.admin.distr.tracelabel.com -M ./distributors
@@ -58,15 +66,9 @@ docker-compose exec ca.cli chmod -R a+rwx ./distributors
 docker-compose exec ca.cli rm  ./distributors/admincerts/Admin@distr.tracelabel.com-cert.pem
 docker-compose exec ca.cli cp -r ./distributors/admin/signcerts/cert.pem ./distributors/admincerts/
 echo "${msg_sub}-----> Done for 'DistributorsMSP'${reset}"
+### Tracelabel ##########################################################################
 
 
-# copy TraceLabel to peers
-cp -r ./crypto-config/ordererOrganizations/tracelabel.com/msp/intermediatecerts ./crypto-config/ordererOrganizations/tracelabel.com/orderers/peer0.tracelabel.com/msp
-cp -r ./crypto-config/ordererOrganizations/tracelabel.com/msp/cacerts ./crypto-config/ordererOrganizations/tracelabel.com/orderers/peer0.tracelabel.com/msp
-cp -r ./crypto-config/ordererOrganizations/tracelabel.com ./crypto-config/peerOrganizations/
-mkdir -p ./crypto-config/peerOrganizations/tracelabel.com/peers
-cp -r ./crypto-config/peerOrganizations/tracelabel.com/orderers/* ./crypto-config/peerOrganizations/tracelabel.com/peers/
-rm -rf ./crypto-config/peerOrganizations/tracelabel.com/orderers
 # copy intermediate certs to peer
 
 

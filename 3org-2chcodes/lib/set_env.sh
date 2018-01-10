@@ -3,8 +3,9 @@
 if [ -f ./.env ]; then
   rm ./.env
 fi
+. ./.env_base
 
-echo "-----> Updating environment."
+echo "${msg_sub}-----> Updating environment.${reset}"
 CA_CRYPTO_DIR=./crypto-config/peerOrganizations/brand1.com/ca
 CA_BRAND1_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand1.com/ca | grep _sk)
 CA_BRAND2_PRIVATE_KEY=$(ls -f1 ./crypto-config/peerOrganizations/brand2.com/ca | grep _sk)

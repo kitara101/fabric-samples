@@ -8,14 +8,15 @@ metadata:
     node: ca
     tier: middle
 spec:
+  type: NodePort
   ports:
-    - port: 5984
+    - port: 7054
+      nodePort: 30054
   selector:
     app: tracelabel
     org: tracelabel
     node: ca
     tier: middle
-  clusterIP: None
 
 ---
 apiVersion: apps/v1beta1 # for versions before 1.8.0 use apps/v1beta1

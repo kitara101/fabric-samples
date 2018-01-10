@@ -4,3 +4,4 @@ hfc-key-store/
 node_modules/
 crypto-config/
 config/
+.idea/
