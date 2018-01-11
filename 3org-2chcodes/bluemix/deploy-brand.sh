@@ -26,8 +26,6 @@ echo "${msg}===> Deploying ${BRAND} to Bluemix.${reset}"
 CA_PRIVATE_KEY=$(ls -f1 ../crypto-config/peerOrganizations/${BRAND_SHORT}.com/ca | grep _sk)
 PEER_PRIVATE_KEY=$(ls -f1 ../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/keystore | grep _sk)
 PEER_SIGN_CERT=$(ls -f1 ../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/signcerts | grep pem)
-echo $PEER_PRIVATE_KEY
-echo $PEER_SIGN_CERT
 
 
 #### Deploying CA
@@ -61,22 +59,50 @@ kubectl apply  -f ${CONFIG}/service-ca.yml
 echo "${msg_sub}-----> CA service done${reset}"
 
 
-# run peer
-#kubectl create secret generic ${BRAND}-peer-db --from-file=user=.db.username --from-file=password=.db.password
-#kubectl create secret generic ${BRAND}-peer-msp   \
-#                                            --from-file=admin_cert=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/admincerts/Admin@${BRAND_SHORT}.com-cert.pem \
-#                                            --from-file=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/cacerts \
-#                                            --from-file=private_key=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/keystore/$PEER_PRIVATE_KEY \
-#                                            --from-file=sign_cert=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/signcerts/$PEER_SIGN_CERT \
-#                                            --from-file=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/tlscacerts
+#### Deploying peer
+echo "${msg_sub}-----> deploying Peer0${reset}"
+RES_NAME=${BRAND}-peer-db
+echo "--------> checking secret '${RES_NAME}'${reset}"
+$(kubectl get secret ${RES_NAME} > /dev/null 2>&1 )
+if [ $? -eq 1 ]; then
+   echo "--------> creating secret '${RES_NAME}'${reset}"
+   kubectl create secret generic ${RES_NAME} --from-file=user=${CONFIG}/.db.username --from-file=password=${CONFIG}/.db.password
+else
+   echo "--------> exists${reset}"
+fi
 
-#kubectl create secret generic ${BRAND}-peer-users   \
-#                                            --from-file=admin_cert=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/users/Admin@${BRAND_SHORT}.com/msp/admincerts/Admin@${BRAND_SHORT}.com-cert.pem \
-#                                            --from-file=ca_cert=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/users/Admin@${BRAND_SHORT}.com/msp/cacerts/ca.${BRAND_SHORT}.com-cert.pem \
 
+RES_NAME=${BRAND}-peer-msp
+echo "--------> checking secret '${RES_NAME}'${reset}"
+$(kubectl get secret ${RES_NAME} > /dev/null 2>&1 )
+if [ $? -eq 1 ]; then
+   echo "--------> creating secret '${RES_NAME}'${reset}"
+   kubectl create secret generic ${RES_NAME}   \
+                                            --from-file=admin_cert=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/admincerts/Admin@${BRAND_SHORT}.com-cert.pem \
+                                            --from-file=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/cacerts \
+                                            --from-file=private_key=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/keystore/$PEER_PRIVATE_KEY \
+                                            --from-file=sign_cert=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/signcerts/$PEER_SIGN_CERT \
+                                            --from-file=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/peers/peer0.${BRAND_SHORT}.com/msp/tlscacerts
+else
+   echo "--------> exists${reset}"
+fi
 
-#kubectl apply -f ${CONFIG}/volumes.yml
-#kubectl apply -f ./service-couchdb.yml
-#kubectl apply -f ./service-peer.yml
+RES_NAME=${BRAND}-peer-users
+echo "--------> checking secret '${RES_NAME}'${reset}"
+$(kubectl get secret ${RES_NAME} > /dev/null 2>&1 )
+if [ $? -eq 1 ]; then
+   echo "--------> creating secret '${RES_NAME}'${reset}"
+   kubectl create secret generic ${RES_NAME}   \
+                                            --from-file=admin_cert=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/users/Admin@${BRAND_SHORT}.com/msp/admincerts/Admin@${BRAND_SHORT}.com-cert.pem \
+                                            --from-file=ca_cert=../crypto-config/peerOrganizations/${BRAND_SHORT}.com/users/Admin@${BRAND_SHORT}.com/msp/cacerts/ca.${BRAND_SHORT}.com-cert.pem
+else
+   echo "--------> exists${reset}"
+fi
+
+echo "--------> creating persistent volume for couchdb ${reset}"
+kubectl apply -f ${CONFIG}/volumes.yml
+echo "--------> creating couchdb service${reset}"
+kubectl apply -f ${CONFIG}/service-couchdb.yml
+#kubectl apply -f ${CONFIG}/service-peer.yml
 
 echo "${msg}===> ${BRAND} deployed to Bluemix.${reset}"

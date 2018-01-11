@@ -46,7 +46,7 @@ spec:
         tier: middle
     spec:
       containers:
-      - image: registry.au-syd.bluemix.net/tlabel/fabric-ca:latest
+      - image: registry.au-syd.bluemix.net/tracelabel/fabric-ca:latest
         name: fabric-ca
         env:
         - name: FABRIC_CA_HOME

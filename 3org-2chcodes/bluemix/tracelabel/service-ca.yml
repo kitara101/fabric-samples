@@ -19,6 +19,39 @@ spec:
     tier: middle
 
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tracelabel-ca-pv-claim
+  labels:
+    app: tracelabel
+    org: tracelabel
+    node: ca
+    tier: middle
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100M
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tracelabel-ca-pv-claim2
+  labels:
+    app: tracelabel
+    org: tracelabel
+    node: ca
+    tier: middle
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100M
+---
 apiVersion: apps/v1beta1 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
 metadata:
@@ -46,25 +79,41 @@ spec:
         tier: middle
     spec:
       containers:
-      - image: registry.au-syd.bluemix.net/tlabel/fabric-ca:latest
+      - image: registry.eu-de.bluemix.net/hyperledger/fabric-ca:latest
         name: fabric-ca
+        command: ["sh"]
+        args: ["-c", "fabric-ca-server start -b admin:adminpw -d --cafiles ../ca1/cfg/fabric-ca-config.yaml --cafiles ../ca2/cfg/fabric-ca-config.yaml"]
         env:
         - name: FABRIC_CA_HOME
-          value: /etc/hyperledger/fabric-ca-server
-        - name: FABRIC_CA_SERVER_CA_NAME
-          value: ca.tracelabel.com
-        - name: FABRIC_CA_SERVER_CA_CERTFILE
-          value: /etc/hyperledger/fabric-ca-server-config/ca.tracelabel.com-cert.pem
-        - name: FABRIC_CA_SERVER_CA_KEYFILE
-          value: /etc/hyperledger/fabric-ca-server-config/528302063e6bc713d8be304cca0e3db766cc8aa9f0a966c4f99735cae94bec7e_sk
+          value: /etc/hyperledger/fabric-ca-server/ca
         ports:
         - containerPort: 7054
           name: ca
         volumeMounts:
-        - name: ca-msp
-          mountPath: /etc/hyperledger/fabric-ca-server-config
+        - name: ca
+          mountPath: /etc/hyperledger/fabric-ca-server/ca
+        - name: ca1
+          mountPath: /etc/hyperledger/fabric-ca-server/ca1/cfg
           readOnly: true
+        - name: ca-data
+          mountPath: /etc/hyperledger/fabric-ca-server/ca1/data
+          subPath: ca1/msp
+        - name: ca2
+          mountPath: /etc/hyperledger/fabric-ca-server/ca2/cfg
+          readOnly: false
+        - name: ca-data
+          mountPath: /etc/hyperledger/fabric-ca-server/ca2/data
+          subPath: ca2/msp
       volumes:
-      - name: ca-msp
+      - name: ca
         secret:
-          secretName: tracelabel-ca
+          secretName: tracelabel-default-ca
+      - name: ca1
+        secret:
+          secretName: tracelabel-ca1
+      - name: ca2
+        secret:
+          secretName: tracelabel-ca2
+      - name: ca-data
+        persistentVolumeClaim:
+          claimName: tracelabel-ca-pv-claim

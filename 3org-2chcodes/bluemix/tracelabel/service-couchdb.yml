@@ -63,7 +63,7 @@ spec:
         tier: db
     spec:
       containers:
-      - image: registry.au-syd.bluemix.net/tlabel/fabric-couchdb:latest
+      - image: registry.au-syd.bluemix.net/tracelabel/fabric-couchdb:latest
         name: couchdb
         env:
         - name: COUCHDB_USER

@@ -51,7 +51,7 @@ spec:
         tier: middle
     spec:
       containers:
-      - image: registry.au-syd.bluemix.net/tlabel/fabric-peer:latest
+      - image: registry.au-syd.bluemix.net/tracelabel/fabric-peer:latest
         name: fabric-peer
         env:
         - name: CORE_VM_ENDPOINT

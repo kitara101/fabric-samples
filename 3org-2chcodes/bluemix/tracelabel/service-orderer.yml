@@ -47,7 +47,7 @@ spec:
         tier: middle
     spec:
       containers:
-      - image: registry.au-syd.bluemix.net/tlabel/fabric-orderer:latest
+      - image: registry.au-syd.bluemix.net/tracelabel/fabric-orderer:latest
         name: fabric-orderer
         env:
         - name: ORDERER_GENERAL_LOGLEVEL

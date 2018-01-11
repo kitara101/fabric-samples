@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: brand-1-couchdb
+  name: brand-2-couchdb
   labels:
     app: tracelabel
-    org: brand-1
+    org: brand-2
     node: peer
     tier: db
 spec:
   type: NodePort
   ports:
     - port: 5984
-      nodePort: 30985
+      nodePort: 30986
   selector:
     app: tracelabel
-    org: brand-1
+    org: brand-2
     node: peer
     tier: db
 
@@ -23,10 +23,10 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: brand-1-db-pv-claim
+  name: brand-2-db-pv-claim
   labels:
     app: tracelabel
-    org: brand-1
+    org: brand-2
     node: peer
     tier: db
 spec:
@@ -42,14 +42,14 @@ metadata:
   name: couchdb
   labels:
     app: tracelabel
-    org: brand-1
+    org: brand-2
     node: peer
     tier: db
 spec:
   selector:
     matchLabels:
       app: tracelabel
-      org: brand-1
+      org: brand-2
       node: peer
       tier: db
   strategy:
@@ -58,23 +58,23 @@ spec:
     metadata:
       labels:
         app: tracelabel
-        org: brand-1
+        org: brand-2
         node: peer
         tier: db
     spec:
       containers:
-      - image: registry.au-syd.bluemix.net/tlabel/fabric-couchdb:latest
+      - image: registry.au-syd.bluemix.net/tracelabel/fabric-couchdb:latest
         name: couchdb
         env:
         - name: COUCHDB_USER
           valueFrom:
             secretKeyRef:
-              name: brand-1-peer-db
+              name: brand-2-peer-db
               key: user
         - name: COUCHDB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: brand-1-peer-db
+              name: brand-2-peer-db
               key: password
         ports:
         - containerPort: 5984
@@ -85,4 +85,4 @@ spec:
       volumes:
       - name: persistent-storage
         persistentVolumeClaim:
-          claimName: brand-1-db-pv-claim
+          claimName: brand-2-db-pv-claim
