@@ -14,7 +14,7 @@ CA_TRACELABEL_PRIVATE_KEY=$(ls -f1 ../../crypto-config/ordererOrganizations/trac
 #kubectl create secret generic tracelabel-msp  --from-file=admin-cert=../../crypto-config/peerOrganizations/tracelabel.com/msp/admincerts/Admin@tracelabel.com-cert.pem \
 #                                        --from-file=ca-cert=../../crypto-config/peerOrganizations/tracelabel.com/msp/cacerts/ca.tracelabel.com-cert.pem  
 
-#kubectl apply  -f ./services-ca.yml
+#kubectl apply  -f ./service-ca.yml
 
 
 #kubectl create secret generic orderer-block  --from-file=../../config/genesis.block
@@ -24,7 +24,7 @@ CA_TRACELABEL_PRIVATE_KEY=$(ls -f1 ../../crypto-config/ordererOrganizations/trac
 #                                            --from-file=../../crypto-config/ordererOrganizations/tracelabel.com/orderers/orderer.tracelabel.com/msp/signcerts \
 #                                            --from-file=../../crypto-config/ordererOrganizations/tracelabel.com/orderers/orderer.tracelabel.com/msp/tlscacerts
 
-#kubectl apply -f tracelabel/services-orderer.yml
+#kubectl apply -f tracelabel/service-orderer.yml
 
 
 # run peer
@@ -43,6 +43,6 @@ CA_TRACELABEL_PRIVATE_KEY=$(ls -f1 ../../crypto-config/ordererOrganizations/trac
 
 
 
-#kubectl apply  -f ./services-couchdb.yml
-#kubectl apply  -f ./services-peer.yml
-kubectl apply -f ./services-peer.yml
+#kubectl apply  -f ./service-couchdb.yml
+#kubectl apply  -f ./service-peer.yml
+#kubectl apply -f ./service-peer.yml
